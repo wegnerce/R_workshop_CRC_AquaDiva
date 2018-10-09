@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <title>II. Basic usage of ggplot2 - R from a learners perspective - Data visualization</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "II. Basic usage of ggplot2";
+    var mkdocs_page_input_path = "part2.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="icon icon-home"> R from a learners perspective - Data visualization</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="index.html">I. Getting started</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="part2.html">II. Basic usage of ggplot2</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#data-visualization-and-exploration">Data visualization and exploration</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#ggplot2">ggplot2</a></li>
+        
+            <li><a class="toctree-l3" href="#ggplot2-versus-base-r">ggplot2 versus base R</a></li>
+        
+            <li><a class="toctree-l3" href="#basic-customizations-a-bit-about-aesthetics">Basic customizations / a bit about aesthetics</a></li>
+        
+            <li><a class="toctree-l3" href="#facetting-and-wrapping">Facetting and wrapping</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="part3.html">III. One level up</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">R from a learners perspective - Data visualization</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>II. Basic usage of ggplot2</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="data-visualization-and-exploration">Data visualization and exploration</h1>
+<h2 id="ggplot2">ggplot2</h2>
+<p>Base R's plotting capabilities are not bad, but the bottom line is, even with a lot of tweaking the resulting plots are visually rather less appealing. When you are dealing with your data, you want to present it in the best possible/convincing way. Often when I read papers and I see mediocre figures I think one thing, namely: "RESPECT YOUR DATA!". Investing time in in proper plotting/visualization/beautifying is usually more than worth it as it pays off in multiple regards.</p>
+<p>Luckily, there are a multitude of R packages that provide us with almost unlimited options of data visualization. The most common one is <em>ggplot2</em>, which was created and is maintained by <a href="https://hadley.nz/">Hadley Wickham</a>. Hadley is incredibly active in the R scene and maintains a lot of popular R packages/tools including:</p>
+<ul>
+<li>dplyr</li>
+<li>tidyr</li>
+<li>stringr</li>
+<li><em>ggplot2</em></li>
+</ul>
+<p>to name a few. He is also one of the main persons behind <a href="https://www.rstudio.com/">RStudio</a>.</p>
+<h2 id="ggplot2-versus-base-r">ggplot2 versus base R</h2>
+<p>Plotting in base R can be mostly done using data stored in vectors. In comparison, <em>ggplot2</em> relies on dataframes. Let's have a look at one of these as a quick reminder:</p>
+<pre><code class="R">data(mtcars)
+head(mtcars)
+      mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+</code></pre>
+
+<p>Dataframes are nothing else but lists of vectors of equal lengths. It we take a qick look at our workshop mock data, are we dealing with a dataframe as well?</p>
+<pre><code class="R">aqd_mock &lt;- read.table(&quot;simulated_dataset.txt&quot;, header=T, sep=&quot;\t&quot;, row.names = &quot;SampleID&quot;)
+head(aqd_mock)
+ Well Month Season Cluster Zone Aquifer TEMP_W_ES  EC     EC25   PH   DO NH4 PO4 DOC TOC   TIC   NO3   SO4  Cl   Ca
+Sample1  H41   Mar Spring       2  HTL     HTL       4.4 455 113.7800 7.41 6.41 0.0 0.4 1.3 1.3 36.81 24.34 21.86 5.6 34.7
+Sample2  H41   Jun Summer       2  HTL     HTL       4.5 465 113.2046 8.21 5.50 0.1 0.1 1.1 1.2 37.45 19.29 15.33 5.8 33.7
+Sample3  H41   Aug Summer       2  HTL     HTL       4.7 444 108.1701 7.31 3.71 0.2 0.9 1.7 1.8 32.23 12.98 19.24 5.6 30.9
+Sample4  H41   Nov Autumn       2  HTL     HTL       4.8 449 110.1839 7.31 3.20 0.2 0.1 1.5 1.7 35.84 12.04 16.49 5.7 30.3
+Sample5  H41   Feb Winter       2  HTL     HTL       3.9 457 115.9376 7.21 6.99 0.0 1.1 0.7 0.8 34.27 23.79 26.22 5.9 35.4
+Sample6  H41   May Spring       2  HTL     HTL       4.8 477 116.3691 7.31 7.83 0.0 2.4 0.7 0.7 35.37 26.71 23.91 5.6 36.0
+         Fe    Mg   Mn  Na
+Sample1 0.0 23.17 0.00 3.0
+Sample2 0.0 24.51 0.00 2.0
+Sample3 5.2 29.54 0.35 3.5
+Sample4 1.4 29.00 0.34 3.3
+Sample5 6.0 23.90 0.09 3.5
+Sample6 2.7 21.95 0.09 1.6
+</code></pre>
+
+<p>Apparently we do. BTW:</p>
+<div class="admonition question">
+<p class="admonition-title">Question</p>
+<ul>
+<li>Why do we add the "header" and "row.names" parameters?</li>
+</ul>
+</div>
+<p>Besides from the usage of dataframes, the second key characteristics of <em>ggplot2</em> is that you work with layers. Basically, every <em>ggplot2</em> object is like a canvas and we keep painting on it by adding layers, aka geoms.</p>
+<pre><code class="R">library(&quot;ggplot2&quot;)
+# Initialize a ggplot object
+ggplot(aqd_mock, aes(x=Zone, y=Fe))
+</code></pre>
+
+<p>Thats our canvas, and yes so far it is fairly empty. We have to fill it by adding the aforementioned <em>geom</em> objects, before we take a look at the overall <em>ggplot2</em> syntax.</p>
+<pre><code>ggplot(
+  data = &lt;some_data_frame&gt;,
+  mapping = aes(
+    x = &lt;some_column&gt;,
+    y = &lt;some_other_column&gt;,
+    random aesthetics = &lt;based_on_a_random_parameter&gt;
+    )
+  ) +
+  geom_&lt;some_plot_type&gt;()
+</code></pre>
+
+<p>Now we add some content.</p>
+<pre><code class="R">ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point()
+</code></pre>
+
+<p>We just created our first <em>ggplot2</em> plot. Whoa.</p>
+<p><img alt="alt text" src="it_works.jpeg" /></p>
+<h2 id="basic-customizations-a-bit-about-aesthetics">Basic customizations / a bit about aesthetics</h2>
+<p>Lets be more serios, our dataset spans data from different seasons. One obvious question is whether we can identify differences over the year? Let's find out and color our dots according to season.</p>
+<pre><code class="R"># A touch of color
+ggplot(aqd_mock, aes(x=Well, y=Fe, col = Season)) + geom_point()
+</code></pre>
+
+<p>We can use this simple example to learn more about how <em>ggplot2</em> aesthetics work.</p>
+<pre><code>ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(col = Season))
+ggplot(aqd_mock, aes(x=Zone, y=Fe, col = Season)) + geom_point(colour = &quot;Black&quot;)
+
+# Why does the following not work?
+ggplot(aqd_mock, aes(x=Zone, y=Fe, col = Season)) + geom_point(aes(col = &quot;Black&quot;))
+
+# A second variable to modify aesthetics
+ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(col = Season, shape = Well))
+
+# That does not make so much sense hm?
+ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(col = Season, shape = Aquifer))
+ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(fill = Season, shape = factor(Aquifer), alpha = .6, size = 5), colour = &quot;Black&quot;) + scale_shape_manual(values=c(21,22))
+
+# Getting rid of some legends
+ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(fill = Season, shape = factor(Aquifer), alpha = .6, size = 5), colour = &quot;Black&quot;) + scale_shape_manual(values=c(21,22)) + guides(size = FALSE, alpha = FALSE)
+# Success
+</code></pre>
+
+<p>Ah well, so far nothing really obvious, however right now it is really hard to tell. Let's try to 
+visualize this better.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise</p>
+<ol>
+<li>Check out geom_boxplot() via ?geom_boxplot()</li>
+<li>Plot box plots combined with dot plots for the Fe content at the different wells, using the season as grouping. </li>
+<li>Try out geom_violin() as well.</li>
+</ol>
+</div>
+<p>Does that that help, do we see differences across season now?</p>
+<pre><code># A first boxplot
+ggplot(aqd_mock, aes(x=Well, y=Fe)) + geom_boxplot(alpha = .6) +
+  geom_point(aes(fill=Season ,size = 5, shape = factor(Aquifer), alpha = .6), colour = &quot;Black&quot;, position = position_jitterdodge()) + scale_shape_manual(values=c(21,22)) + guides(size = FALSE, alpha = FALSE)
+
+# And now grouped
+ggplot(aqd_mock, aes(x=Well, y=Fe)) + geom_boxplot(aes(fill = factor(Season), alpha = .6)) +
+  geom_point(aes(fill=Season ,size = 5, shape = factor(Aquifer), alpha = .6), colour = &quot;Black&quot;, position = position_jitterdodge()) + scale_shape_manual(values=c(21,22)) + guides(size = FALSE, alpha = FALSE, fill=guide_legend(title=&quot;Season&quot;), shape = guide_legend(title=&quot;Aquifer&quot;))
+</code></pre>
+
+<div class="admonition question">
+<p class="admonition-title">Question</p>
+<ul>
+<li>What is the parameter "position" good for?</li>
+</ul>
+</div>
+<p>In the beginning we talked about pretty figures, I do not know about you, but I strongly dislike the default <em>ggplot2</em> theme (you should as well). How can we get rid of this grey background and white gridlines?</p>
+<pre><code>last_plot() + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+</code></pre>
+
+<p>That is better, at least a bit. Now we want to add/modify in additon the title and the axis labels of the plot.</p>
+<pre><code>last_plot() + labs(title=&quot;AquaDiva mock data&quot;, subtitle=&quot;Iron content&quot;, y=&quot;Fe [mg/L]&quot;, x=&quot;Well&quot;, caption=&quot;(c) CEW&quot;)
+</code></pre>
+
+<p>Not bad, really not bad.</p>
+<p>The last_plot() function is incredibly useful when you are continuously working on a figure. BUT, what do we see our seasons are not properly ordered. Even in a world of climate change, autumn is not before spring and summer. We covered that yesterday.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise</p>
+<ul>
+<li>Fix the order of the seasons.</li>
+</ul>
+</div>
+<p>Here we go.</p>
+<pre><code>seasons &lt;- (&quot;Spring&quot;, &quot;Summer&quot;, &quot;Autumn&quot;, &quot;Winter&quot;)
+aqd_mock$Season = factor(aqd_mock$Season, levels = seasons)
+</code></pre>
+
+<p>Given that we have the package RColorBrewer loaded, we can also fairly easy manipulate the colors of our boxplot.</p>
+<pre><code># Playing around with colors thanks to RColorBrewer
+last_plot() + scale_fill_brewer(palette=&quot;Set1&quot;)
+last_plot() + scale_fill_brewer(palette=&quot;Set2&quot;)
+last_plot() + scale_fill_brewer(palette=&quot;Blues&quot;)
+</code></pre>
+
+<h2 id="facetting-and-wrapping">Facetting and wrapping</h2>
+<p>You have probably noticed that we are obviously dealing with a dataset that comprises a bunch of different variables. </p>
+<p>Lets shortly talk about types of variables, what types come to your mind?</p>
+<p>Some examples:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>categorical</td>
+<td>variables that can be put in categories, e.g. male and female</td>
+</tr>
+<tr>
+<td>discrete</td>
+<td>variables that are limited to a certain number of values, e.g. grades in school</td>
+</tr>
+<tr>
+<td>measurement</td>
+<td>variables that can be measured and given a number, e.g. ...</td>
+</tr>
+<tr>
+<td>ordinal</td>
+<td>categorical variables that can be ordered, e.g. low, medium, high diversity</td>
+</tr>
+<tr>
+<td>ranked</td>
+<td>ordinal variables where every point can be ordered, e.g. OTU ranks</td>
+</tr>
+</tbody>
+</table>
+<p>Imagine the following scenario, we now know that there are differences across season for the Fe-content in the different wells. Now we want to do the same plot for all our measurement variables. </p>
+<p><img alt="alt text" src="darkside_II.jpeg" /></p>
+<p>How do we do that?!</p>
+<p>What we have to do is known as facetting. For that we can make use of two different <em>ggplot2</em> functions, facet_wrap() and facet_grid(), with the differencing being the number of facetting dimensions. A quick example for facet_wrap():</p>
+<pre><code># We load the ggplot2 dataset mtcars
+data(mtcars)
+# And do some wrapping
+ggplot(data = mtcars, mapping = aes(x = hp, y = mpg)) + geom_point() + facet_wrap(~ cyl, scales = 'free_x')
+</code></pre>
+
+<p>And for facet_grip():</p>
+<pre><code>ggplot(data = mtcars, mapping = aes(x = hp, y = mpg)) + geom_point() + facet_grid(am ~ cyl, scales = 'free_x')
+</code></pre>
+
+<p>For detailed examples about facetting I recommend these links <a href="https://stcorp.nl/R_course/tutorial_ggplot2.html">click me</a> and <a href="https://plot.ly/ggplot2/facet/">me too</a>.</p>
+<p>All nice and well, but how do we apply that to our mock data?</p>
+<pre><code>head(aqd_mock)
+</code></pre>
+
+<p>We have a couple of rather descriptive variables (Well, Cluster, Zone, Aquifer) and a bunch of measurement variables (e.g. PH, DO, Na, TIC, TOC, DOC). So in principle what we want to do now is transform our data in a way that allows us to facet the data based on our measurement variables.</p>
+<p>Here we go:</p>
+<pre><code># We use the gather function
+# Option (1)
+aqd_long &lt;- aqd_mock %&gt;% gather(Parameter, value, TEMP_W_ES:Na)
+head(aqd_long)
+# Option (2)
+aqd_long &lt;- gather(aqd_mock, Parameter, value, TEMP_W_ES:Na)
+head(aqd_long)
+</code></pre>
+
+<div class="admonition question">
+<p class="admonition-title">Question</p>
+<p>Take a moment and try to figure out how gather() works. What is the role of the %&gt;% operator?</p>
+</div>
+<pre><code>head(aqd_long)
+    Well Month Season Cluster Zone Aquifer Parameter    value
+1    H41   Mar Spring       2  HTL     HTL TEMP_W_ES   4.4000
+2    H41   Jun Summer       2  HTL     HTL TEMP_W_ES   4.5000
+3    H41   Aug Summer       2  HTL     HTL TEMP_W_ES   4.7000
+4    H41   Nov Autumn       2  HTL     HTL TEMP_W_ES   4.8000
+5    H41   Feb Winter       2  HTL     HTL TEMP_W_ES   3.9000
+6    H41   May Spring       2  HTL     HTL TEMP_W_ES   4.8000
+7    H41  July Summer       2  HTL     HTL TEMP_W_ES   5.1000
+8    H41   Oct Autumn       2  HTL     HTL TEMP_W_ES   4.8000
+9    H41   Jan Winter       2  HTL     HTL TEMP_W_ES   4.9000
+10   H41   Apr Spring       2  HTL     HTL TEMP_W_ES   4.8000
+</code></pre>
+
+<p>Our data was partially transformed into what is commonly known as long format. We can now use the transformed dataframe for facetting as before:</p>
+<pre><code>ggplot(aqd_long, aes(x = Well, y = value), xlab=&quot;&quot;) +
+    geom_point() +
+    labs(title=&quot;Dataset parameters&quot;) + theme(axis.text.x = element_text(angle = 25, hjust = 1)) +
+    facet_wrap(~Parameter)
+</code></pre>
+
+<p>That kind of worked, success with the facetting, but this plot needs some serious tweaking in terms of visual appeal.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise</p>
+<ol>
+<li>Adjust the axis ranges by free scaling</li>
+<li>Add boxplots as you did before</li>
+<li>Use the black and white theme and get rid of the grid lines etc.</li>
+</ol>
+</div>
+<p>A potential solution could look as follows:</p>
+<pre><code>ggplot(aqd_long, aes(x=Well, y=value)) + geom_boxplot(aes(fill = Season)) +
+  geom_point(aes(fill = Season, alpha = 0.6, shape = factor(Aquifer)), colour = &quot;Black&quot;, position = position_jitterdodge()) +
+  labs(title=&quot;Dataset parameters&quot;) + theme(axis.text.x=element_text(angle = 25, hjust = 1)) +
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
+  facet_wrap(~Parameter, scales = &quot;free&quot;) + ylab(label = &quot;mg/L&quot;) + 
+  guides(size = FALSE, alpha = FALSE, fill=guide_legend(title=&quot;Season&quot;), shape = guide_legend(title=&quot;Aquifer&quot;)) +
+  scale_shape_manual(values=c(21,22))
+</code></pre>
+
+<p>Although we look at quite a number of parameters the figure does not look terribly messy. Let's filter the dataset anyway a bit. Imagine we are only interested in the following parameters:</p>
+<ul>
+<li>Fe</li>
+<li>TEMP_W_ES</li>
+</ul>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise</p>
+<ul>
+<li>Subset the data accordingly and re-do the plotting.</li>
+</ul>
+</div>
+<pre><code>aqd_long_subset &lt;- aqd_long[which(aqd_long$Parameter == c(&quot;Fe&quot;, &quot;TEMP_W_ES&quot;)),]
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="part3.html" class="btn btn-neutral float-right" title="III. One level up">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="I. Getting started"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="part3.html" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+
+</body>
+</html>
