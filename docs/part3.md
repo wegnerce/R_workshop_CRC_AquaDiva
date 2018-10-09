@@ -1,4 +1,4 @@
-# Data visualization and exploration
+# Steps beyond
 
 ## Going beyond the boxplot - correlation plots
 

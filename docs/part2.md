@@ -1,4 +1,4 @@
-# Data visualization and exploration
+# Basic usage of ggplot2
 
 ## ggplot2
 
