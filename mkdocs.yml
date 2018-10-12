@@ -1,8 +1,8 @@
 site_name: "R from a learners perspective - Data visualization"
 nav:
-- I. Getting started: index.md
-- II. Basic usage of ggplot2 : part2.md
-- III. One level up: part3.md
+- Data manipulation: index.md
+- Data visualization and exploration : part2.md
+- Basic statistics: part3.md
 markdown_extensions:
 - admonition
 theme: readthedocs

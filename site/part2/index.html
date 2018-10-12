@@ -7,23 +7,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   
-  <link rel="shortcut icon" href="img/favicon.ico">
-  <title>II. Basic usage of ggplot2 - R from a learners perspective - Data visualization</title>
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Data visualization and exploration - R from a learners perspective - Data visualization</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
-  <link rel="stylesheet" href="css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   
   <script>
     // Current page data
-    var mkdocs_page_name = "II. Basic usage of ggplot2";
+    var mkdocs_page_name = "Data visualization and exploration";
     var mkdocs_page_input_path = "part2.md";
     var mkdocs_page_url = null;
   </script>
   
-  <script src="js/jquery-2.1.1.min.js" defer></script>
-  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
@@ -36,9 +36,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href="index.html" class="icon icon-home"> R from a learners perspective - Data visualization</a>
+        <a href=".." class="icon icon-home"> R from a learners perspective - Data visualization</a>
         <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
@@ -50,15 +50,30 @@
           
             <li class="toctree-l1">
 		
-    <a class="" href="index.html">I. Getting started</a>
+    <a class="" href="..">Data manipulation</a>
 	    </li>
           
             <li class="toctree-l1 current">
 		
-    <a class="current" href="part2.html">II. Basic usage of ggplot2</a>
+    <a class="current" href="./">Data visualization and exploration</a>
     <ul class="subnav">
             
     <li class="toctree-l2"><a href="#data-visualization-and-exploration">Data visualization and exploration</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#synopsis">Synopsis</a></li>
+        
+            <li><a class="toctree-l3" href="#setting-the-stage">Setting the stage</a></li>
+        
+            <li><a class="toctree-l3" href="#basic-plotting">Basic plotting</a></li>
+        
+            <li><a class="toctree-l3" href="#base-r-data-visualization-options">Base R data visualization options</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l2"><a href="#basic-usage-of-ggplot2">Basic usage of ggplot2</a></li>
     
         <ul>
         
@@ -73,12 +88,23 @@
         </ul>
     
 
+    <li class="toctree-l2"><a href="#steps-beyond">Steps beyond</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#going-beyond-the-boxplot-correlation-plots">Going beyond the boxplot - correlation plots</a></li>
+        
+            <li><a class="toctree-l3" href="#going-beyond-the-boxplot-while-going-back">Going beyond the boxplot while going back</a></li>
+        
+        </ul>
+    
+
     </ul>
 	    </li>
           
             <li class="toctree-l1">
 		
-    <a class="" href="part3.html">III. One level up</a>
+    <a class="" href="../part3/">Basic statistics</a>
 	    </li>
           
         </ul>
@@ -91,7 +117,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">R from a learners perspective - Data visualization</a>
+        <a href="..">R from a learners perspective - Data visualization</a>
       </nav>
 
       
@@ -99,11 +125,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
+    <li><a href="..">Docs</a> &raquo;</li>
     
       
     
-    <li>II. Basic usage of ggplot2</li>
+    <li>Data visualization and exploration</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -114,6 +140,204 @@
             <div class="section">
               
                 <h1 id="data-visualization-and-exploration">Data visualization and exploration</h1>
+<h2 id="synopsis">Synopsis</h2>
+<p>In this part of the workshop you will familiarize yourself with:</p>
+<ul>
+<li>R's basic plotting capabilities</li>
+<li><em>ggplot2</em>, its syntax and fundamentals</li>
+<li>as well as some advanced data visualization</li>
+</ul>
+<p>If you have questions ASK, feel free to drop me an <a href="mailto:carl-eric.wegner@uni-jena.de">e-mail</a> also after the workshop.</p>
+<h2 id="setting-the-stage">Setting the stage</h2>
+<p>Plotting is a very personal thing (btw color schemes as well), ask three different people and you will get a variety of feedback with respect to plotting and data visualization in general. A lot of people get away with <em>Excel</em>, <em>SigmaPlot</em>, <em>GraphPad</em>, <em>Matplotlib</em> (if you are a Pythonista, which makes you a good person by default) or something else. </p>
+<p>R as its parent S is a programming language primarily dedicated to data manipulation (in a good sense) and statistical analysis. Due to its modular architecture and the availabilitry of sophisticated libraries for data processing and plotting it is an excellent choice for any kind of data visualization.</p>
+<p>When I got in touch with R the first time, I was googling options how to do a complex multi-panel figure. The original query was "plot facets vector graphics". If you do the exact same query now, you will end up with <em>ggplot2</em> being the second hit. Yep, this is how I "met" R and years later I would still lie if I would say that I'm any sort of R expert. Most of me using R is still centered around the following dogma:</p>
+<ol>
+<li>Define the problem</li>
+<li>Look up necessary R resources</li>
+<li>Apply available examples to own data</li>
+<li>Be happy after A LOT of try and error.</li>
+</ol>
+<p>Ok, first things first, fire up RStudio and check whether you have the following packages installed and load them. Throughout the course you can either execute commands from within a script (mark the respective lines of code and hit CTRL+ENTER) or directly in the console.</p>
+<pre><code>library(&quot;ggplot2&quot;)
+library(&quot;dplyer&quot;)
+library(&quot;tidyr&quot;)
+library(&quot;ellipse&quot;)
+library(&quot;RColorBrewer&quot;)
+</code></pre>
+
+<p>Ideally you should see no error message popping up, if you see any then you did not prepare properly for the workshop - shame on you, or rather me, because I did not tell you in time.</p>
+<p><img alt="alt text" src="../fail.jpg" /></p>
+<h2 id="basic-plotting">Basic plotting</h2>
+<p>Enough blabla, this session is about data visualization, where are the plots? Here they come. Create a new R script, type the following two lines and execute them:</p>
+<pre><code>dotchart(rnorm(250), col = &quot;blue&quot;, main = &quot;Quick ugly example&quot;)
+hist(rnorm(250), col = &quot;blue&quot;, main = &quot;Quick ugly example II&quot;)
+</code></pre>
+
+<p>Alternatively type them one after another in the console.</p>
+<p>Keep an eye on the plot window, what did just happen?</p>
+<div class="admonition question">
+<p class="admonition-title">Question</p>
+<ul>
+<li>Try to figure out what the individual functions and parameters do.</li>
+</ul>
+</div>
+<p>First take home message of the day - the R help is your friend (a good one).
+The general syntax for calling R's help is:</p>
+<p><code>?functionXYZ()</code></p>
+<p>Let's start exploring R's basic plotting capabilities in a bit more detail, this is a bit of a recap of what you did yesterday. </p>
+<pre><code># Let's define two arbitrary vectors
+bacteria &lt;- c(10, 30, 60, 5, 90)
+archaea &lt;- c(25, 27, 22, 37, 10)
+
+# Plot them both
+plot(bacteria, type=&quot;o&quot;, col = &quot;orange&quot;)
+lines(archaea, type=&quot;o&quot;, pch=22, lty=2, col = &quot;blue&quot;)
+
+axis(1, at=1:5, lab=(c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;)))
+</code></pre>
+
+<p>Let's say what we just plotted are relative abundances for archaea and bacteria across different months. But the output looks like garbage, apparently we had at first default x-axis labels, which were overwritten. The result is this "beauty" of a plot.</p>
+<p>How to fix that, take a look at the following code:</p>
+<pre><code>plot(bacteria, type=&quot;o&quot;, col = &quot;orange&quot;, axes=FALSE, ann = FALSE)
+lines(archaea, type=&quot;o&quot;, pch=22, lty=2, col = &quot;blue&quot;)
+
+axis(1, at=1:5, lab=(c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;)))
+</code></pre>
+
+<p>Does that make it any better? What is now missing?</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise</p>
+<ul>
+<li>Call the help for axis(), box(), title(), and legend. </li>
+<li>Add a y-axis, a box around the plot, titles for the plot as well as the two axes, and a legend. </li>
+</ul>
+</div>
+<p>One possible solution:</p>
+<pre><code>plot(bacteria, type=&quot;o&quot;, col = &quot;orange&quot;, axes=FALSE, xlab = &quot;Month&quot;, ylab = &quot;Rel. abundance [%]&quot;, main = &quot;Bac and Arc&quot;)
+lines(archaea, type=&quot;o&quot;, pch=22, lty=3, col = &quot;blue&quot;)
+axis(1, at=1:5, lab=(c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;)))
+box()
+axis(2, las = 2)
+legend(1, max(bacteria), c(&quot;Bacteria&quot;, &quot;Archaea&quot;), cex=0.8, col=c(&quot;orange&quot;, &quot;blue&quot;), 
+       pch=c(21,22), lty=c(1,3))
+</code></pre>
+
+<p>Alright, so far we played with a dataset that we quickly created, as you already learned before you can easily import datasets like this from any delimited file. Imagine a file like this (e.g. table.tsv):</p>
+<table>
+<thead>
+<tr>
+<th>bacteria</th>
+<th>archaea</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10</td>
+<td>25</td>
+</tr>
+<tr>
+<td>30</td>
+<td>27</td>
+</tr>
+<tr>
+<td>60</td>
+<td>22</td>
+</tr>
+<tr>
+<td>5</td>
+<td>37</td>
+</tr>
+<tr>
+<td>90</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<p>Two columns, tab-delimited, and the columns have names ("bacteria2, "archaea").</p>
+<p>We could read this file as outlined below. </p>
+<pre><code># Read the table, pay attention to the header and sep arguments
+rel_prok &lt;- read.table(&quot;table.tsv&quot;, header=T, sep=&quot;\t&quot;)
+
+# Instead we merge our two vectors because you did a lot of importing yesterday...
+rel_prok &lt;- data.frame(bacteria, archaea)
+colnames(rel_prok) &lt;- c(bacteria, archaea)
+
+# We define colors to be used with our data series, because why not
+plot_colors &lt;- c(&quot;blue&quot;, &quot;orange&quot;)
+
+# We initiate a PNG devide to save the output
+png(filename=&quot;output.png&quot;, height=250, width=300, bg=&quot;white&quot;)
+
+# AND NOW?!
+# Adapt your code
+# and end it with
+dev.off()
+# to turn off the PNG device
+</code></pre>
+
+<div class="admonition exercise">
+<p class="admonition-title">Exercise</p>
+<ul>
+<li>Plot the data as before, and save the output as a .png.</li>
+<li>Do you have to adjust the dimensions?</li>
+<li>What is the dev.off() function doing?</li>
+</ul>
+</div>
+<h2 id="base-r-data-visualization-options">Base R data visualization options</h2>
+<p>So far we basically only did line charts, base R provides us however with a whole range of different visualization options. </p>
+<p>Let's take one of our vectors and see how we can create bar charts and how we can visualize both data series by dot charts.</p>
+<p>Bar charts:</p>
+<pre><code>bacteria &lt;- c(10, 30, 60, 5, 90)
+
+# A simple bar plot
+barplot(bacteria, main=&quot;Bacteria relative abundance&quot;, xlab=&quot;Month&quot;,
+   ylab=&quot;Rel. abundance [%]&quot;, names.arg=c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;))
+
+# Simple, and slightly pimped, pattern fill
+barplot(bacteria, main=&quot;Bacteria relative abundance&quot;, xlab=&quot;Month&quot;,  
+   ylab=&quot;Rel. abundance [%]&quot;, names.arg=c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;), 
+   border=&quot;gray&quot;, density=c(10,20,30,40,50))
+
+# Add a box around the plot because we like boxes
+box()
+
+# This time with colors
+barplot(bacteria, main=&quot;Bacteria relative abundance&quot;, xlab=&quot;Month&quot;,  
+        ylab=&quot;Rel. abundance [%]&quot;, names.arg=c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;),
+        col=rainbow(5))
+</code></pre>
+
+<p>And a dot chart:</p>
+<pre><code># Plot the dotchart
+dotchart(t(rel_prok), color=c(&quot;blue&quot;, &quot;red&quot;), main=&quot;Dotchart Bacteria and Archaea&quot;)
+</code></pre>
+
+<p>We finish this first session with a little exercise.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise</p>
+<p>Use the simple dataset to plot a grouped bar chart incl. a legend and a dot chart with months as row names. Export both as .png files. <em>NOT</em> using RStudio's export function.</p>
+</div>
+<p>For more examples of using the plotting capabilities of base R have a look for instance <a href="https://www.harding.edu/fmccown/r/">here</a>.</p>
+<p>Solutions:</p>
+<pre><code># Grouped bar chart
+barplot(as.matrix(rel_prok), main=&quot;Bac vs Arc&quot;, ylab= &quot;Rel. abundance&quot;,
+        beside=TRUE, col=rainbow(5))
+box()
+
+# Place the legend at the top-left corner with no frame  
+# using rainbow colors
+legend(&quot;topleft&quot;, c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;), cex=1, 
+       bty=&quot;n&quot;, fill=rainbow(5))
+</code></pre>
+
+<pre><code># Dot chart with months as labels
+row.names(rel_prok) &lt;- c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;)
+rel_prok
+dotchart(t(rel_prok), color=c(&quot;blue&quot;, &quot;red&quot;), main=&quot;Dotchart Bacteria and Archaea&quot;, cex = 1)
+</code></pre>
+
+<h1 id="basic-usage-of-ggplot2">Basic usage of ggplot2</h1>
 <h2 id="ggplot2">ggplot2</h2>
 <p>Base R's plotting capabilities are not bad, but the bottom line is, even with a lot of tweaking the resulting plots are visually rather less appealing. When you are dealing with your data, you want to present it in the best possible/convincing way. Often when I read papers and I see mediocre figures I think one thing, namely: "RESPECT YOUR DATA!". Investing time in in proper plotting/visualization/beautifying is usually more than worth it as it pays off in multiple regards.</p>
 <p>Luckily, there are a multitude of R packages that provide us with almost unlimited options of data visualization. The most common one is <em>ggplot2</em>, which was created and is maintained by <a href="https://hadley.nz/">Hadley Wickham</a>. Hadley is incredibly active in the R scene and maintains a lot of popular R packages/tools including:</p>
@@ -186,7 +410,7 @@ ggplot(aqd_mock, aes(x=Zone, y=Fe))
 </code></pre>
 
 <p>We just created our first <em>ggplot2</em> plot. Whoa.</p>
-<p><img alt="alt text" src="it_works.jpeg" /></p>
+<p><img alt="alt text" src="../it_works.jpeg" /></p>
 <h2 id="basic-customizations-a-bit-about-aesthetics">Basic customizations / a bit about aesthetics</h2>
 <p>Lets be more serios, our dataset spans data from different seasons. One obvious question is whether we can identify differences over the year? Let's find out and color our dots according to season.</p>
 <pre><code class="R"># A touch of color
@@ -301,7 +525,7 @@ last_plot() + scale_fill_brewer(palette=&quot;Blues&quot;)
 </tbody>
 </table>
 <p>Imagine the following scenario, we now know that there are differences across season for the Fe-content in the different wells. Now we want to do the same plot for all our measurement variables. </p>
-<p><img alt="alt text" src="darkside_II.jpeg" /></p>
+<p><img alt="alt text" src="../darkside_II.jpeg" /></p>
 <p>How do we do that?!</p>
 <p>What we have to do is known as facetting. For that we can make use of two different <em>ggplot2</em> functions, facet_wrap() and facet_grid(), with the differencing being the number of facetting dimensions. A quick example for facet_wrap():</p>
 <pre><code># We load the ggplot2 dataset mtcars
@@ -387,6 +611,104 @@ head(aqd_long)
 </div>
 <pre><code>aqd_long_subset &lt;- aqd_long[which(aqd_long$Parameter == c(&quot;Fe&quot;, &quot;TEMP_W_ES&quot;)),]
 </code></pre>
+
+<h1 id="steps-beyond">Steps beyond</h1>
+<h2 id="going-beyond-the-boxplot-correlation-plots">Going beyond the boxplot - correlation plots</h2>
+<p>One of the strong suits of <em>ggplot2</em> is that it comprises numerous vizualization options, with dot plots and box plots being only two of them. And beyond that there are meanwhile a lot of R packages that stick to the <em>ggplot2</em> syntax that expand R's plotting capabilities even more. </p>
+<p>Ok, what we will try now is to get in a very simple way an idea whether our parameters are correlated with each other.</p>
+<p>Quick reminder, part of our data is made up by descriptive variables. So first, we will extract only our measurement variables.</p>
+<pre><code># What are the dimensions of our dataframe
+dim(aqd_mock)
+# Quickly check again which columns are containing descriptive variables
+head(aqd_mock)
+# Subset the dataframe accordingly
+aqd_num &lt;- aqd_mock[7:24]
+</code></pre>
+
+<p>Done. Now we calculate correlations between all measurement variables.</p>
+<pre><code># Some more necessary R packages
+library(&quot;ellipses&quot;)
+library(&quot;RColorBrewer&quot;)
+
+# Calculate correlations
+aqd_cor = cor(aqd_num)
+
+# A sneek peek at our correlations
+aqd_cor
+
+# We want to colorize our planned correlation plot, so lets create a palette
+my_colors &lt;- brewer.pal(5, &quot;Spectral&quot;)
+my_colors=colorRampPalette(my_colors)(100)
+
+# Plot the plot ;-)
+ord &lt;- order(aqd_cor[1, ])
+aqd_ord = aqd_cor[ord, ord]
+plotcorr(aqd_ord , col=my_colors[data_ord*50+50] , mar=c(1,1,1,1)  )
+</code></pre>
+
+<p>Oh hallo, that's pretty, what does it mean? Let's break up these lines.</p>
+<pre><code># Calculate correlations
+aqd_cor = cor(aqd_num)
+</code></pre>
+
+<div class="admonition question">
+<p class="admonition-title">Question</p>
+<ul>
+<li>What does cor() do?</li>
+</ul>
+</div>
+<p>That was an easy one. What about:</p>
+<pre><code># We want to colorize our planned correlation plot, so lets create a palette
+my_colors &lt;- brewer.pal(5, &quot;Spectral&quot;)
+my_colors=colorRampPalette(my_colors)(100)
+</code></pre>
+
+<div class="admonition question">
+<p class="admonition-title">Question</p>
+<ul>
+<li>What is a palette? </li>
+<li>What do brewer.pal() and colorRampPalette() do?</li>
+</ul>
+</div>
+<pre><code># Plot the plot ;-)
+ord &lt;- order(aqd_cor[1, ])
+aqd_ord = aqd_cor[ord, ord]
+plotcorr(aqd_ord , col=my_colors[aqd_ord*50+50], type = &quot;lower&quot;, diag = FALSE, numbers = TRUE , mar=c(1,1,1,1))
+</code></pre>
+
+<div class="admonition exercise">
+<p class="admonition-title">Exercise</p>
+<ul>
+<li>Take a moment and try to figure out what the figure shows you</li>
+</ul>
+</div>
+<h2 id="going-beyond-the-boxplot-while-going-back">Going beyond the boxplot while going back</h2>
+<p>Last but not least we want to take a look at interactive plots. Plots do not have to static, interactive plots allow us to dive into data into a much more engaging way. </p>
+<p>Good, what we now try is to turn or facetted box plot into an interactive version.</p>
+<p>Luckily, this is extremly easy.</p>
+<pre><code>p &lt;- ggplot(aqd_long, aes(x=Well, y=value)) + geom_boxplot() +
+  geom_point(aes(fill = Season, alpha = 0.6, shape = factor(Aquifer)), colour = &quot;Black&quot;, position = position_jitterdodge()) +
+  labs(title=&quot;Dataset parameters&quot;) + theme(axis.text.x=element_text(angle = 25, hjust = 1)) +
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
+  facet_wrap(~Parameter, scales = &quot;free&quot;) + ylab(label = &quot;mg/L&quot;) + 
+  guides(size = FALSE, alpha = FALSE, fill=guide_legend(title=&quot;Season&quot;), shape = guide_legend(title=&quot;Aquifer&quot;)) +
+  scale_shape_manual(values=c(21,22))
+
+p &lt;- ggplotly(p)
+p
+</code></pre>
+
+<p>You are now able to explore your data interactively in the viewer window of RStudio. For more ideas about interactive <em>ggplot2</em> plots check out this <a href="https://plot.ly/ggplot2/">link</a>.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise</p>
+<p>Create interactive boxplots:</p>
+<ul>
+<li>For a single variable boxplot (e.g. Fe)</li>
+<li>And a subset</li>
+</ul>
+</div>
+<p><sub>Written by Carl-Eric Wegner</sub>
+<sub>Oct 2018</sub></p>
               
             </div>
           </div>
@@ -394,10 +716,10 @@ head(aqd_long)
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="part3.html" class="btn btn-neutral float-right" title="III. One level up">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../part3/" class="btn btn-neutral float-right" title="Basic statistics">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="I. Getting started"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href=".." class="btn btn-neutral" title="Data manipulation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -423,16 +745,16 @@ head(aqd_long)
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="part3.html" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../part3/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
-    <script>var base_url = '.';</script>
-    <script src="js/theme.js" defer></script>
-      <script src="search/main.js" defer></script>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
 
 </body>
 </html>
