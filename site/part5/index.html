@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Multivariate analysis - R from a learners perspective - The Küsel Lab (c) 2018</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Multivariate analysis";
+    var mkdocs_page_input_path = "part5.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> R from a learners perspective - The Küsel Lab (c) 2018</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">From Excel to R</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../part2/">Data manipulation</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../part3/">Data visualization and exploration</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../part4/">Basic statistics</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Multivariate analysis</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#multivariate-analyses-of-microbial-communities-with-r">Multivariate Analyses of Microbial Communities with R</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#importing-multivariate-data-using-phyloseq">Importing multivariate data using phyloseq</a></li>
+        
+            <li><a class="toctree-l3" href="#generating-intial-community-composition-figures-to-explore-our-data">Generating intial community composition figures to explore our data</a></li>
+        
+            <li><a class="toctree-l3" href="#exploring-alpha-diversity">Exploring Alpha Diversity</a></li>
+        
+            <li><a class="toctree-l3" href="#principal-component-analysis-of-geochemical-variables">Principal Component Analysis of Geochemical Variables</a></li>
+        
+            <li><a class="toctree-l3" href="#beta-diversity-ordination-plots">Beta Diversity Ordination Plots</a></li>
+        
+            <li><a class="toctree-l3" href="#beta-diversity-hypothesis-testing">Beta Diversity Hypothesis Testing</a></li>
+        
+            <li><a class="toctree-l3" href="#linking-to-environmental-parameters-and-biplots">Linking to environmental parameters and biplots</a></li>
+        
+            <li><a class="toctree-l3" href="#bioindicators">Bioindicators</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">R from a learners perspective - The Küsel Lab (c) 2018</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Multivariate analysis</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="multivariate-analyses-of-microbial-communities-with-r">Multivariate Analyses of Microbial Communities with R</h1>
+<h2 id="importing-multivariate-data-using-phyloseq">Importing multivariate data using phyloseq</h2>
+<p>Loading the required packages
+We recommend checking out some of the following references:<br />
+<a href="https://mb3is.megx.net/gustame">GUSTA ME</a><br />
+<a href="https://joey711.github.io/phyloseq/">Phyloseq Homepage</a><br />
+<a href="http://cc.oulu.fi/~jarioksa/opetus/metodi/vegantutor.pdf">Ecological Analysis of Ecological Communities</a>  </p>
+<p>First we'll clear our R environment of all attached objects and define the memory limit for windows systems.</p>
+<pre><code class="python"># Memory limit only needed if you use windows system
+#clear all currently attached R objects
+rm(list=ls())
+memory.limit()
+memory.limit(size=56000)
+</code></pre>
+
+<p>Install the following packages. You will only need to do this once on your computer.</p>
+<pre><code class="python">source(&quot;https://bioconductor.org/biocLite.R&quot;)
+biocLite('phyloseq')
+install.packages(vegan)
+biocLite(&quot;Biostrings&quot;)
+install.packages(&quot;biostrings&quot;)
+install.packages(&quot;reshape2&quot;)
+install.packages(&quot;ape&quot;)
+install.packages(&quot;picante&quot;)
+install.packages(&quot;ggpubr&quot;)
+install.packages(&quot;gridExtra&quot;)
+install.packages(&quot;ggplot2&quot;)
+install.packages(&quot;devtools&quot;)
+install_github(&quot;vqv/ggbiplot&quot;)
+install_github(&quot;pmartinezarbizu/pairwiseAdonis/pairwiseAdonis&quot;)
+</code></pre>
+
+<p>Then load the packages we need:</p>
+<pre><code class="python">library(phyloseq)
+library(vegan)
+ibrary(Biostrings) # To read fasta file
+library(reshape2)
+library(ape) # to read tree file
+library(scales)
+library(picante)
+library(ggplot2)
+library(ggpubr)
+library(gridExtra)
+library(ggbiplot)
+library(pairwiseAdonis)
+
+#For reproducibility
+set.seed(123)
+</code></pre>
+
+<h3 id="importing-our-data">Importing our data</h3>
+<p>Check out this <a href="https://joey711.github.io/phyloseq/import-data.html">link</a> for the authors guide on importing data into phyloseq.</p>
+<pre><code class="python">#First set our working directory (this will be where you placed the data files
+setwd(&quot;C:/IF/microbial community course&quot;)
+
+###### Read data tables
+otu_tb &lt;- read.table(&quot;data/otu_table.txt&quot;, sep=&quot;\t&quot;, row.names=1,header=T)
+tax_tb &lt;- read.table(&quot;data/tax_table.txt&quot;, sep=&quot;\t&quot;, row.names=1,header=T)
+metadata_tb &lt;- read.csv(&quot;data/simulated_dataset.txt&quot;, sep=&quot;\t&quot;, dec = &quot;.&quot;, row.names=1, header=TRUE)
+tree &lt;- read.tree(&quot;data/rep_otu.phylip.tre&quot;) 
+refseq &lt;- readDNAStringSet(&quot;data/rep_otu.fasta&quot;)
+
+# import into phyloseq object
+OTU &lt;- otu_table(as.matrix(otu_tb), taxa_are_rows = TRUE)
+TAX &lt;- tax_table(as.matrix(tax_tb)) 
+METADATA &lt;- sample_data(metadata_tb)
+TREE &lt;- phy_tree(tree)
+
+student_data &lt;- phyloseq(OTU, TAX, METADATA, TREE, refseq)
+save(student_data, file =&quot;student_data.phyloseq&quot;)
+
+# Check the phyloseq file
+student_data
+
+sample_names(student_data)
+head(otu_table(student_data))
+head(tax_table(student_data))
+str(sample_data(student_data)) # check internal structure of the metadata file
+</code></pre>
+
+<h2 id="generating-intial-community-composition-figures-to-explore-our-data">Generating intial community composition figures to explore our data</h2>
+<p>First off we'll create a directory to save our figures and datasets.</p>
+<pre><code class="python">dir.create(&quot;output&quot;) # create a new directory
+</code></pre>
+
+<h3 id="data-preprocessing-steps">Data preprocessing steps</h3>
+<p>We'll use these objects for the rest of the analyses  </p>
+<h4 id="removing-singletons">Removing singletons</h4>
+<p>For these examples we'll remove sequences that only occur once in the dataset since we cannot be sure they are biological units or caused by sequencing errors.  </p>
+<pre><code class="python">student_data_rs &lt;- prune_taxa(taxa_sums(student_data) &gt; 1, student_data)
+</code></pre>
+
+<p>For the next plots we'll scale the species counts into a percent abundance value. We'll also use this dataframe in other places.</p>
+<pre><code class="python">student_data_prop &lt;- transform_sample_counts(student_data_rs, function(x) 100*x/sum(x))
+</code></pre>
+
+<p>The second is to rarefy our data by subsampling to an even depth. Note there are more robust methods to handle uneven datasets and we recommend checking out <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003531">this publication by McMurdie and Holmes</a></p>
+<pre><code class="python">data_rarefy &lt;- rarefy_even_depth(student_data_rs, sample.size = min(sample_sums(student_data_rs)), verbose = FALSE, replace = TRUE)
+</code></pre>
+
+<h3 id="generating-a-barplot-of-the-dominant-taxonomic-groups">Generating a barplot of the dominant taxonomic groups</h3>
+<p>To start off with we will merge all OTUs per well and the summarize them by the phylum level</p>
+<pre><code class="python">student_data_prop_merged &lt;- merge_samples(student_data_prop, &quot;Well&quot;)
+</code></pre>
+
+<p>We need to re-apply names, before after merging, phyloseq will change the wells into level 1, 2, 3, not H41, H43 and H52 as before</p>
+<pre><code class="python">sample_data(student_data_prop_merged)$Well &lt;- c(&quot;H41&quot;, &quot;H43&quot;, &quot;H52&quot;)
+</code></pre>
+
+<p>Then averge your data again (value should be 100% per sample)</p>
+<pre><code class="python">student_data_prop_merged_prop &lt;- transform_sample_counts(student_data_prop_merged, function(x) 100*x/sum(x))
+</code></pre>
+
+<p>Merges species that have the same taxonomy at a certain taxaonomic rank.</p>
+<pre><code class="python">RANK=&quot;Phylum&quot; # select Phylum as rank
+student_data_prop_merged_prop_rank &lt;- tax_glom(student_data_prop_merged_prop, taxrank=RANK)
+</code></pre>
+
+<p>Generate the barplot using the phyolseq function "plot_bar"</p>
+<pre><code class="python">plot_bar(student_data_prop_merged_prop_rank, fill=RANK) 
+</code></pre>
+
+<h4 id="subset-and-show-the-composition-of-the-actinobacteria">Subset and show the composition of the Actinobacteria</h4>
+<p>We'll subset our dataset to grab only bacterial OTU from the phylum <strong>Actinobacteria</strong></p>
+<pre><code class="python">actino &lt;- subset_taxa(student_data_prop_merged_prop, Phylum == &quot;Actinobacteria&quot;)
+</code></pre>
+
+<p>We'll define our own vector of colors to plot by:</p>
+<pre><code class="python">set_colors &lt;- c(
+  &quot;#DA5724&quot;,  &quot;#508578&quot;, &quot;#c481fd&quot;,  &quot;#CD9BCD&quot;,&quot;#AD6F3B&quot;, &quot;#652926&quot;, &quot;#6dcff6&quot;,  &quot;#C84248&quot;,  &quot;#1e90ff&quot;, &quot;#8569D5&quot;, 
+  &quot;#cc0953&quot;, &quot;#D1A33D&quot;, &quot;grey&quot;,  &quot;pink&quot;, &quot;gold&quot;,&quot;#8A7C64&quot;, &quot;#599861&quot;, &quot;navy&quot;, &quot;#5F7FC7&quot; , &quot;tomato&quot;, &quot;#673770&quot;,  
+  &quot;#008080&quot;, &quot;#2F4F4F&quot;, &quot;#FAEBD7&quot;, &quot;#ff1493&quot;, &quot;#5e738f&quot;,&quot;#808000&quot;, &quot;#D14285&quot;, &quot;#ffa500&quot;, &quot;cbd588&quot;, &quot;wheat&quot;, 
+  &quot;#d2b48c&quot;, &quot;cyan2&quot;,&quot;black&quot;,  &quot;#BC8F8F&quot;, &quot;#800000&quot;,&quot;#008B8B&quot;,  &quot;#BC8F8F&quot;
+)
+</code></pre>
+
+<p>Then we can generate the following bar plot:</p>
+<pre><code class="python">plot_bar(actino , x=&quot;Class&quot;, fill=&quot;Order&quot;, facet_grid=~Well) + ylab(&quot;Relative abundance (%)&quot;) + scale_fill_manual(values=set_colors)
+</code></pre>
+
+<h4 id="improving-our-first-bar-plot">Improving our first bar plot</h4>
+<p>We'll extract the abundance data for the abundance phyla (e.g. Relative abundance &gt; 1%) and save the data</p>
+<pre><code class="python">student_data_prop_merged_prop_rank_filter &lt;- filter_taxa(student_data_prop_merged_prop_rank, function(x) mean(x) &gt; 1, TRUE)
+abun.phylum &lt;- psmelt(student_data_prop_merged_prop_rank_filter)
+View(abun.phylum) 
+</code></pre>
+
+<p>If everything looks good, we can save this dataset as a text file</p>
+<pre><code class="python">write.table(abun.phylum, &quot;output/phylum_over1percent.txt&quot;, sep=&quot;\t&quot;, dec=&quot;.&quot;, col.names=NA)
+</code></pre>
+
+<p>Then we'll calculate the sum of all remaining groups for an "Others" category.</p>
+<pre><code class="python">others &lt;- tax_glom(student_data_prop_merged_prop_rank_filter, &quot;Kingdom&quot; )
+otu_table(others) &lt;- 100 - otu_table(others)
+tax_table(others)@.Data[,2:6] &lt;- &quot;Others&quot;# Define all taxanomic levels as &quot;Others&quot;
+taxa_names(others) &lt;- &quot;Others&quot; # Define the taxa name as &quot;Others&quot;
+</code></pre>
+
+<p>Next we can combine the abundant taxa with the sum of rare taxa</p>
+<pre><code class="python">OTU1 &lt;- otu_table(cbind(otu_table(others), otu_table(student_data_prop_merged_prop_rank_filter) ), taxa_are_rows = FALSE)
+TAX1 &lt;- tax_table(rbind(tax_table(others), tax_table(student_data_prop_merged_prop_rank_filter) )) 
+METADATA1 &lt;- sample_data(student_data_prop_merged_prop_rank_filter)
+
+final &lt;- phyloseq(OTU1, TAX1, METADATA1)
+</code></pre>
+
+<p>Plot the abundance phyla using bar or heatmap</p>
+<pre><code class="python">plot_bar(final, fill=RANK) + 
+  scale_fill_manual(values=set_colors)+
+  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 0.5))
+</code></pre>
+
+<p>And we can save the figure using the ggplot function, "ggsave"</p>
+<pre><code class="python">ggsave(&quot;output/taxonomic composition_phylum.png&quot;, width = 4, height = 4)
+</code></pre>
+
+<p>We could also generate a heatmap of the same data</p>
+<pre><code class="python">plot_heatmap(final, method =&quot;PCoA&quot;, distance = &quot;bray&quot;, sample.label=&quot;Well&quot;, taxa.label=&quot;Phylum&quot;, low=&quot;#000033&quot;, high=&quot;#FF3300&quot;)+
+  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 0.5))
+# Note: by default plot_heatmap takes a log transformation (trans = log_trans(4))
+ggsave(&quot;output/heatmap_phylum.png&quot;, width = 4, height = 4)
+</code></pre>
+
+<h4 id="extracting-the-top-30-otus-and-showing-the-abundance-across-samples">Extracting the top 30 OTUs and showing the abundance across samples</h4>
+<pre><code class="python">top30 &lt;- prune_taxa(names(sort(taxa_sums(student_data_prop),TRUE)[1:30]), student_data_prop)
+
+plot_heatmap(top30, 
+             # method =&quot;NMDS&quot;, # default method
+             method = NULL,
+            # distance = &quot;bray&quot;, 
+            sample.label=&quot;Well&quot;, 
+            taxa.label=&quot;Class&quot;, trans = NULL)+
+  theme(axis.text.x = element_text(angle = -90, vjust = 0.5, hjust = 0.5))
+
+ggsave(&quot;output/heatmap_top30.png&quot;, width = 4, height = 4)
+</code></pre>
+
+<h4 id="phylogenetic-tree">Phylogenetic tree</h4>
+<p>We can use "Ape" and the provided phylogenetic tree to plot our abundant OTUs</p>
+<pre><code class="python">top20 &lt;- prune_taxa(names(sort(taxa_sums(student_data_prop_merged_prop),TRUE)[1:20]), student_data_prop_merged_prop)
+
+plot_tree(top20, color = &quot;Phylum&quot;, shape = &quot;Well&quot;, 
+          #label.tips = &quot;Family&quot;, 
+         # size = &quot;abundance&quot;, 
+          plot.margin = 0.5, 
+         ladderize = TRUE) +
+  # coord_polar(theta=&quot;y&quot;)+
+  scale_shape_manual(values = c(1,2,16))
+
+ggsave(&quot;output/phylo_tree_phylum.png&quot;, width = 4, height =4)
+</code></pre>
+
+<h2 id="exploring-alpha-diversity">Exploring Alpha Diversity</h2>
+<p>Many richness estimates are modeled on singletons and doubletons in the abundance data. You need to leave them in the dataset if you want a meaningful estimate.
+We'll be using the rarefied dataset we created in the "Data Preprocessing steps" above.</p>
+<pre><code class="python">student_data_rarefy &lt;- data_rarefy
+</code></pre>
+
+<pre><code class="python">plot_richness(student_data_rarefy) # warnings probably because of the graphics that didn't show clearly
+
+p_alpha &lt;- plot_richness(student_data_rarefy, x=&quot;Well&quot;,  
+                          measures=c(&quot;Simpson&quot;, &quot;Shannon&quot;), 
+                         color=&quot;Well&quot;) + geom_point(size=5, alpha=0.7) + scale_color_manual(values = c(&quot;red&quot;, &quot;blue&quot;, &quot;black&quot;))
+
+p_alpha 
+</code></pre>
+
+<h3 id="estimate-alpha-diversity">estimate alpha diversity</h3>
+<pre><code class="python">alphadiv &lt;- estimate_richness(student_data_rarefy
+                              # , measures=c(&quot;Simpson&quot;, &quot;Shannon&quot;)
+)
+alphadiv 
+</code></pre>
+
+<h3 id="phylogenetic-diversity">Phylogenetic Diversity</h3>
+<p>Start off with a function that transposes the OTU matrix into a form that vegan can use.</p>
+<pre><code class="python">vegan_otu &lt;- function(physeq) {
+  OTU &lt;- otu_table(physeq)
+  if (taxa_are_rows(OTU)) {
+    OTU &lt;- t(OTU)
+  }
+  return(as(OTU, &quot;matrix&quot;))
+}
+</code></pre>
+
+<p>To calculate Faith's phylogenetic distance we need a community data matrix and a phylo tree object</p>
+<pre><code class="python">FaithPD &lt;- pd(vegan_otu(student_data_rarefy), phy_tree(student_data_rarefy))
+
+## Returns a dataframe of the PD and species richness (SR) values for all samples
+alphadiv2 &lt;- data.frame(alphadiv, FaithPD)
+
+write.table(alphadiv2, &quot;output/alpha diversity.txt&quot;, sep=&quot;\t&quot;, dec=&quot;.&quot;, col.names=NA)
+
+# Note: SR equals Observed using different functions
+identical(alphadiv2$SR, alphadiv2$Observed)
+</code></pre>
+
+<p>Now you can go on with univariate data analysis, e.g. ANOVA or plot nice figures, For instance: </p>
+<pre><code class="python"># combine the diversity results with the sample data file
+sampledf &lt;- data.frame(sample_data(student_data_rarefy))
+df &lt;- data.frame(alphadiv2, sampledf)
+</code></pre>
+
+<h3 id="plot-boxplot-with-significance">Plot boxplot with significance</h3>
+<p>Add significance levels of the diversity indices between different wells</p>
+<pre><code class="python">my_comparisons &lt;- list( c(&quot;H41&quot;, &quot;H43&quot;), c(&quot;H43&quot;, &quot;H52&quot;), c(&quot;H41&quot;, &quot;H52&quot;) )
+</code></pre>
+
+<p>Phylogenetic diversity</p>
+<pre><code class="python">pd_well &lt;- ggboxplot(df, &quot;Well&quot;, &quot;PD&quot;,
+          color = &quot;Well&quot;, palette =c(&quot;red&quot;, &quot;blue&quot;, &quot;black&quot;),
+          add = &quot;jitter&quot;, 
+          shape = &quot;Aquifer&quot;)+
+  stat_compare_means(comparisons = my_comparisons, label = &quot;p.signif&quot;) + # pairwise comparison
+  stat_compare_means(label.y = 50)      # Add global p-value      
+</code></pre>
+
+<p>Shannon diversity</p>
+<pre><code class="python">shannon_well &lt;- ggboxplot(df, &quot;Well&quot;, &quot;Shannon&quot;,
+          color = &quot;Well&quot;, palette =c(&quot;red&quot;, &quot;blue&quot;, &quot;black&quot;),
+          add = &quot;jitter&quot;, 
+          shape = &quot;Aquifer&quot;)+
+  stat_compare_means(comparisons = my_comparisons, label = &quot;p.signif&quot;) + # pairwise comparison
+  stat_compare_means(label.y = 5.5)      # Add global p-value       
+</code></pre>
+
+<p>Plotting both together:</p>
+<pre><code class="python">grid.arrange(pd_well, shannon_well, ncol=2)
+
+dev.copy(png, file=&quot;alpha_diversity.png&quot;, width=1500, height=600, res=144)
+dev.off()
+#could also use ggsave() here
+</code></pre>
+
+<h2 id="principal-component-analysis-of-geochemical-variables">Principal Component Analysis of Geochemical Variables</h2>
+<p>Read the data tables</p>
+<pre><code class="python">metadata_tb &lt;- read.csv(&quot;data/simulated_dataset.txt&quot;, sep=&quot;\t&quot;, dec = &quot;.&quot;, row.names=1, header=TRUE)
+str(metadata_tb) # check internal structure of the metadata file
+</code></pre>
+
+<pre><code class="python">metadata_tb.pca &lt;- prcomp(metadata_tb[,c(7:21)], center = TRUE, scale. = TRUE)
+# center = TRUE: a logical value indicating whether the variables should be shifted to be zero centered
+# center = TRUE, scale. = TRUE: the variables is adviced to be scaled to have unit variance before the analysis takes place
+</code></pre>
+
+<p>To check the results of the PCA. The print method returns the standard deviation of each of the four PCs, and their rotation (or loadings), which are the coefficients of the linear combinations of the continuous variables.</p>
+<pre><code class="python">print(metadata_tb.pca)
+</code></pre>
+
+<p>The summary method describe the importance of the PCs. We can see there that the first two PCs accounts for more than 51% of the variance of the data.</p>
+<pre><code class="python">summary(metadata_tb.pca)
+</code></pre>
+
+<h3 id="plotting-with-base-r">Plotting with base R</h3>
+<p>The plot method returns a plot of the variances (y-axis) associated with the PCs (x-axis). The Figure below is useful to decide how many PCs to retain for further analysis. We can see that the first two PCs explain most of the variability in the data.</p>
+<pre><code class="python">plot(metadata_tb.pca, type = &quot;l&quot;)
+plot(metadata_tb.pca)
+</code></pre>
+
+<p>A simple PCA plot</p>
+<pre><code class="python">biplot(metadata_tb.pca, choices = 1:2, scale = 1)
+</code></pre>
+
+<p>Using ggbiplot</p>
+<pre><code class="python">ggbiplot(metadata_tb.pca)
+</code></pre>
+
+<p>Nice looking plot</p>
+<pre><code class="python">ggbiplot(metadata_tb.pca, ellipse=TRUE, 
+         choices = 1:2, 
+         var.axes = TRUE, # Draw arrows for the variables?
+         obs.scale = 1, var.scale = 1, 
+         labels=rownames(metadata_tb), groups=metadata_tb$Well) +
+  scale_colour_manual(name=&quot;Well&quot;, values= c(&quot;red&quot;, &quot;blue&quot;, &quot;black&quot;))+
+  ggtitle(&quot;PCA of simulated dataset&quot;)+
+  theme_bw()+
+  theme(legend.position = &quot;right&quot;)
+
+ggsave(&quot;output/PCA of simulated dataset.png&quot;, width = 8, height = 6)
+</code></pre>
+
+<h2 id="beta-diversity-ordination-plots">Beta Diversity Ordination Plots</h2>
+<h3 id="clustering-and-dendrogram">Clustering and Dendrogram</h3>
+<p>Calculate the distance matrix between samples</p>
+<pre><code class="python">dis &lt;- phyloseq::distance(student_data_prop, &quot;bray&quot;) # distance calculation
+</code></pre>
+
+<p>Hierarchical clustering</p>
+<pre><code class="python">hc1 &lt;- hclust(dis, method=&quot;average&quot;)
+hc2 &lt;- hclust(dis, method=&quot;ward.D&quot;)
+par(mfrow = c(2,1)) 
+plot(hc1) 
+plot(hc2)
+</code></pre>
+
+<p>Add colors to the tips</p>
+<pre><code class="python">sampledf &lt;- data.frame(sample_data(student_data_prop))
+well &lt;- sampledf$Well
+
+# palette&lt;-hue_pal()(length(levels(well)))
+palette &lt;- c(&quot;red&quot;, &quot;blue&quot;, &quot;black&quot; )
+tipColoor &lt;- col_factor(palette, levels=levels(well))(well)
+</code></pre>
+
+<p>Save it as phylo object</p>
+<pre><code class="python">clust.uf&lt;-as.phylo(hclust(dis,method=&quot;ward.D2&quot;))
+# png(&quot;output/cluster.png&quot;)
+plot(clust.uf,tip.color=tipColoor, direction=&quot;downwards&quot;) #10*20
+dev.off()
+</code></pre>
+
+<p>More info on different clustering methods: <a href="http://girke.bioinformatics.ucr.edu/GEN242/pages/mydoc/Rclustering.html">http://girke.bioinformatics.ucr.edu/GEN242/pages/mydoc/Rclustering.html</a></p>
+<h3 id="unconstrained-ordination">Unconstrained ordination</h3>
+<p>Perform an ordination on phyloseq data</p>
+<pre><code class="python">set.seed(123)
+</code></pre>
+
+<p>NMDS plot based on Bray-Curtis distance</p>
+<pre><code class="python">ord &lt;- ordinate(student_data_prop, &quot;NMDS&quot;, &quot;bray&quot;)
+</code></pre>
+
+<p>plot ordination</p>
+<pre><code class="python">p = plot_ordination(student_data_prop, ord, 
+                    # type=&quot;biplot&quot;, 
+                     type=&quot;split&quot;,
+                    # type=&quot;samples&quot;,
+                    # type=&quot;taxa&quot;,
+                     shape=&quot;Well&quot;, color=&quot;Phylum&quot;, 
+                     label=&quot;Well&quot;,
+                     title=&quot;NMDS based on Bray-Curtis distance&quot;)+
+                    # geom_point(size=7, alpha=0.75)+ 
+                     theme_bw()
+print(p)
+ggsave(&quot;output/NMDS_bray.png&quot;, width = 8, height = 4)
+</code></pre>
+
+<h4 id="pcoa-plot-based-on-unifrac-distance">PCoA plot based on Unifrac distance</h4>
+<pre><code class="python">ordu = ordinate(student_data_prop, &quot;PCoA&quot;, &quot;unifrac&quot;, weighted=TRUE)
+summary(ordu)
+p1 = plot_ordination(student_data_prop, ordu, 
+                     axes = 1:2,
+                     type=&quot;samples&quot;, shape=&quot;Season&quot;, color=&quot;Well&quot;, 
+                     #label=&quot;Well&quot;,
+                     # type=&quot;taxa&quot;,color=&quot;Phylum&quot;, 
+                     title=&quot;PCoA based on weighted UniFrac distance&quot;)+
+  geom_point(size=7, alpha=0.75)+ 
+  scale_colour_manual(values= c(&quot;red&quot;, &quot;blue&quot;, &quot;black&quot;))+
+  scale_shape_manual( values= c(0, 1,16,17))+
+  theme_bw()
+
+print(p1)
+</code></pre>
+
+<p>remove the inner dots</p>
+<pre><code class="python">p1$layers&lt;-p1$layer [-1]
+print(p1)
+
+ggsave(&quot;output/PCoA_wunifrac.png&quot;, width = 8, height = 6)
+</code></pre>
+
+<p>Scree plot: shows the fraction of total variance in the data as explained or represented by each PC. </p>
+<pre><code class="python">p_scree &lt;- plot_ordination(student_data_prop, ordu, type=&quot;scree&quot;)
+print(p_scree)
+</code></pre>
+
+<h3 id="constrained-ordination">Constrained ordination</h3>
+<h4 id="rda">RDA</h4>
+<pre><code class="python">ordu2 = ordinate(student_data_prop, &quot;RDA&quot;, &quot;unifrac&quot;, weighted=TRUE)
+summary(ordu2)
+p2 = plot_ordination(student_data_prop, ordu2, 
+                     type=&quot;samples&quot;, 
+                     # shape=&quot;Season&quot;,
+                     color=&quot;Well&quot;, 
+                     #label=&quot;Well&quot;,
+                     # type=&quot;taxa&quot;,color=&quot;Phylum&quot;, 
+                     title=&quot;RDA based on weighted UniFrac distance&quot;)+
+  geom_point(size=7, alpha=0.75)+ 
+  theme_bw()
+
+print(p2)
+</code></pre>
+
+<p>Remove the inner dots</p>
+<pre><code class="python">p2$layers&lt;-p2$layer [-1]
+print(p2)
+ggsave(&quot;output/RDA_wunifrac.png&quot;, width = 6, height = 4)
+</code></pre>
+
+<p>Scree plot: shows the fraction of total variance in the data as explained or represented by each PC. </p>
+<pre><code class="python">p2_scree &lt;- plot_ordination(student_data_prop, ordu2, type=&quot;scree&quot;)
+print(p2_scree)
+</code></pre>
+
+<h4 id="cca-plot-based-on-unifrac-distance">ccA plot based on Unifrac distance</h4>
+<pre><code class="python">set.seed(123)
+ordu3 = ordinate(student_data_prop, &quot;CCA&quot;, &quot;unifrac&quot;, weighted=TRUE)
+summary(ordu3)
+p3 = plot_ordination(student_data_prop, ordu3, 
+                     axes = 1:2,
+                     type=&quot;samples&quot;, shape=&quot;Well&quot;, color=&quot;Well&quot;, 
+                     #label=&quot;Well&quot;,
+                     # type=&quot;taxa&quot;,color=&quot;Phylum&quot;, 
+                     title=&quot;CCA based on weighted UniFrac distance&quot;)+
+  geom_point(size=7, alpha=0.75)+ 
+  theme_bw()
+
+print(p3)
+# remove the inner dots
+p3$layers&lt;-p3$layer [-1]
+print(p3)
+
+# scree plot: shows the fraction of total variance in the data as explained or represented by each PC. 
+p3_scree &lt;- plot_ordination(student_data_prop, ordu3, type=&quot;scree&quot;)
+print(p3_scree)
+</code></pre>
+
+<h2 id="beta-diversity-hypothesis-testing">Beta Diversity Hypothesis Testing</h2>
+<h3 id="permanova-using-adonis-function-in-vegan-package">PERMANOVA using adonis function in Vegan package</h3>
+<p>First calculate bray curtis distance matrix using either weighted unifrac distance or Bray-Curtis distance</p>
+<pre><code class="python"># student_data_prop_bray &lt;- phyloseq::distance(student_data_prop, method = &quot;unifrac&quot;, weighted=TRUE)
+
+student_data_prop_bray &lt;- phyloseq::distance(student_data_prop, method = &quot;bray&quot;)
+</code></pre>
+
+<p>Make a data frame from the sample_data</p>
+<pre><code class="python">sampledf &lt;- data.frame(sample_data(student_data_prop))
+head(sampledf)
+</code></pre>
+
+<p>Then run the Adonis test (Number of permutations: 999)</p>
+<pre><code class="python">ht_well &lt;- adonis(student_data_prop_bray ~ Well, data = sampledf) #  ***
+</code></pre>
+
+<p>This output tells us that our adonis test is significant so we can reject the null hypothesis that our three countries have the same centroid.</p>
+<pre><code class="python">ht_well
+ht_well$aov.tab$&quot;Pr(&gt;F)&quot;
+write.table(data.frame(ht_well$aov.tab), &quot;output/permanova_well.txt&quot;, sep=&quot;\t&quot;, dec=&quot;.&quot;, col.names=NA)
+</code></pre>
+
+<h4 id="posthoc-pairwise-adonis">Posthoc Pairwise Adonis</h4>
+<p>This is an R wrapper function for multilevel pairwise comparison using adonis (~Permanova) from package 'vegan'. 
+The function returns adjusted p-values using p.adjust().
+First, we need to convert the phyloseq object into an OTU-table</p>
+<pre><code class="python">vegan_otu &lt;- function(physeq) {
+  OTU &lt;- otu_table(physeq)
+  if (taxa_are_rows(OTU)) {
+    OTU &lt;- t(OTU)
+  }
+  return(as(OTU, &quot;matrix&quot;))
+}
+
+pairwise.adonis(vegan_otu(student_data_prop), sampledf$Well)
+</code></pre>
+
+<p>!!! Your Turn
+Test if there was any effect of other factors on bacterial community composition, e.g. Season</p>
+<p>Hint:</p>
+<pre><code class="python">adonis(student_data_prop_bray ~ Season, data = sampledf)
+# This output tells us that our adonis test is non-significant 
+</code></pre>
+
+<p>You can do the rest....</p>
+<h3 id="analysis-of-similarities-using-anosim-function-in-vegan-package">Analysis of Similarities using anosim function in Vegan package</h3>
+<pre><code class="python">ano_well &lt;- anosim(student_data_prop_bray, sampledf$Well)
+summary(ano_well)
+par(mfrow=c(1,1))
+plot(ano_well)
+</code></pre>
+
+<p>You can test if there was any effect of other factors on bacterial community composition, e.g. Season </p>
+<pre><code class="python">ano_season &lt;- anosim(student_data_prop_bray, sampledf$Season)
+</code></pre>
+
+<h3 id="homogeneity-of-dispersion-test-using-betadisper-function-in-vegan-package">Homogeneity of dispersion test using betadisper function in Vegan package</h3>
+<p>This is a nonmetric test based on permutations</p>
+<pre><code class="python">dis_well &lt;- betadisper(student_data_prop_bray, sampledf$Well)
+permutest(dis_well) # **
+dis_season &lt;- betadisper(student_data_prop_bray, sampledf$Season)
+permutest(dis_season) # ns
+</code></pre>
+
+<p>Additionally, our betadisper results are significant, meaning we cannot reject the null hypothesis that our groups have the same dispersions. 
+This means we cannot be confident that our adonis result is a real result, and not due to differences in group dispersions</p>
+<h3 id="tukeys-honest-significant-differences">Tukey's Honest Significant Differences</h3>
+<pre><code class="python">well.HSD &lt;- TukeyHSD(dis_well)
+well.HSD 
+</code></pre>
+
+<p>Plot dispersion distances between groups</p>
+<pre><code class="python">par(mfrow=c(1,2))
+plot(well.HSD, las=1)
+plot(dis_well, las=1)
+</code></pre>
+
+<h2 id="linking-to-environmental-parameters-and-biplots">Linking to environmental parameters and biplots</h2>
+<p>We'll use OTUs with mean relative abundance over 0.01% for CCA analysis</p>
+<pre><code class="python">student_data_prop_filter &lt;- filter_taxa(student_data_prop, function(x) mean(x) &gt; 0.01, TRUE)
+</code></pre>
+
+<p>Import the OTU table and geochemical data:</p>
+<pre><code class="python">otutable &lt;- vegan_otu(student_data_prop_filter)
+sampledf &lt;- data.frame(sample_data(student_data_prop_filter))
+</code></pre>
+
+<p>To check whether to choose CCA or RDA, we should use Detrended correspondence analysis (DCA)</p>
+<pre><code class="python">dca &lt;- decorana(otutable)
+dca 
+</code></pre>
+
+<p>Check the "Axis lengths" of the DCA1 (Important)</p>
+<pre><code class="python">summary(dca) # to check the &quot;Axis lengths&quot; of the DCA1 (Important)
+</code></pre>
+
+<p>If this value &lt; 3, it is better to use RDA
+If this value &gt; 4, it is better to use CCA
+If this value is between 3 and 4, either use CCA or RDA</p>
+<h3 id="envfit-ccarda">Envfit + CCA/RDA</h3>
+<p>Much more powerful when more complex factors are tested</p>
+<h4 id="cca">CCA</h4>
+<p>Scale species to unit variance</p>
+<pre><code class="python">df &lt;- data.frame(scale(sampledf[,-c(1:6)]))
+</code></pre>
+
+<p>Test all environmental factors</p>
+<pre><code class="python">ord_all &lt;- cca(otutable ~ ., data=df) 
+</code></pre>
+
+<p>You can choose to test only some of the environmental factors</p>
+<pre><code class="python">ord_select &lt;- cca(otutable ~ EC + DO + PH, df) # 
+</code></pre>
+
+<h4 id="rda_1">RDA</h4>
+<pre><code class="python">bray &lt;- vegdist(otutable, &quot;bray&quot;)
+ord_all &lt;- capscale(bray~., df])
+</code></pre>
+
+<p>Plot all environmental factors</p>
+<pre><code class="python">plot(ord_all, type = &quot;p&quot;, scaling = &quot;sites&quot;) 
+</code></pre>
+
+<h3 id="variance-inflation-factors">Variance Inflation Factors</h3>
+<p>Linear dependencies between constraints can be investigated via the variance inflation factor or VIF
+VIF is a measure of how much the variance of $\hat{\beta}_j$ is inflated by presence of other covariates</p>
+<p>Lots of rules of thumb<br />
+VIF &gt;= 20 indicates strong collinearity in constraints<br />
+VIF &gt;= 10 potnetially of concern &amp; should be looked at  </p>
+<p>They will be completely removed from the estimation, and no biplot scores or centroids are calculated for these aliased constraints. </p>
+<pre><code class="python">vif.cca(ord)
+temp &lt;- vif.cca(ord_all)
+temp
+select_para &lt;- names(temp[temp &lt; 10])
+select_para
+</code></pre>
+
+<p>Keep the environmental factors with VIF less than 10</p>
+<pre><code class="python">ord &lt;- cca(otutable ~ ., df[,select_para]) 
+</code></pre>
+
+<h3 id="fit-environmental-vectors-onto-the-ordination">Fit environmental vectors onto the ordination</h3>
+<p>The function fits environmental vectors or factors onto an ordination. 
+The projections of points onto vectors have maximum correlation with corresponding environmental variables, and the factors show the averages of factor levels.</p>
+<pre><code class="python">fit &lt;- envfit(ord, df[,select_para], perm = 999, display = &quot;lc&quot;, scaling = &quot;sites&quot;)
+fit$vectors # check the significance
+</code></pre>
+
+<p>Extract the best (significant) variables (p &lt; 0.05)</p>
+<pre><code class="python">spp.scrs &lt;- as.data.frame(scores(fit, display = &quot;vectors&quot;))
+spp.scrs
+pval &lt;-  fit$vectors$pvals
+pval 
+</code></pre>
+
+<p>Data for the envfit arrows
+This is necessary, see Gavin Simpson http://stackoverflow.com/questions/14711470/plotting-envfit-vectors-vegan-package-in-ggplot2/25425258#25425258</p>
+<pre><code class="python">fdat &lt;- cbind(spp.scrs, Vector = rownames(spp.scrs), pval)
+</code></pre>
+
+<p>Now select only the signifant factors</p>
+<pre><code class="python">bestEnvVariables&lt;-rownames(fdat)[fdat$pval&lt;=0.05]
+</code></pre>
+
+<p>If you have NA entries, remove them</p>
+<pre><code class="python"># bestEnvVariables&lt;-bestEnvVariables[!is.na(bestEnvVariables)]
+</code></pre>
+
+<p>Redo CCA using the best environmental variables</p>
+<pre><code class="python">eval(parse(text=paste(&quot;ord1 &lt;- cca(otutable ~ &quot;,do.call(paste,c(as.list(bestEnvVariables),sep=&quot; + &quot;)),&quot;,data=sampledf)&quot;,sep=&quot;&quot;)))
+summary(ord1)
+</code></pre>
+
+<p>You can also use anova.cca to select the significant variables</p>
+<pre><code class="python">anova.cca(ord1, perm=9999)
+anova.cca(ord1, by=&quot;margin&quot;, perm=9999) # marginal effects of the terms 
+anova.cca(ord1, by=&quot;terms&quot;, perm=9999) # sequential
+anova.cca(ord1, by=&quot;axis&quot;) # axis, slow
+drop1(ord1, test=&quot;perm&quot;)
+</code></pre>
+
+<p>Now re-fit the environmental factors on ordination</p>
+<pre><code class="python">fit1 &lt;- envfit(ord1,sampledf[,bestEnvVariables], perm = 999, display = &quot;lc&quot;, scaling = &quot;sites&quot;)
+</code></pre>
+
+<p>Simple triplot</p>
+<pre><code class="python">plot(ord1)
+</code></pre>
+
+<p>Simple biplot</p>
+<pre><code class="python">plot(ord1, type=&quot;n&quot;)
+</code></pre>
+
+<p>Plot the samples</p>
+<pre><code class="python">points(ord1, display = &quot;sites&quot;, 
+       col = as.numeric(Moisture),
+       pch=16)
+</code></pre>
+
+<p>Choose the significant environmental factors</p>
+<pre><code class="python">plot(fit1, col = &quot;red&quot;, cex=1.2, axis=TRUE, p.max = 0.05)
+summary(ord1)
+</code></pre>
+
+<h4 id="plot-using-ggplot2">Plot using ggplot2</h4>
+<pre><code class="python">spp.scrs &lt;- data.frame(scores(fit1, display = &quot;vectors&quot;))
+pval &lt;-  fit1$vectors$pvals
+
+#data for the envfit arrows
+
+spp.scrs &lt;- cbind(spp.scrs, Vector = rownames(spp.scrs), pval) # vector table
+scrs &lt;- as.data.frame(scores(ord1, display = &quot;sites&quot;)) # sample table
+scrs &lt;- cbind(scrs, sampledf)
+
+spp.scrs1&lt;- subset(spp.scrs, pval&lt;=0.05) #extracts relevant environment vectors from envifit
+</code></pre>
+
+<p>Biplot</p>
+<pre><code class="python">library(digest)
+p &lt;- ggplot(scrs) +
+  geom_point(mapping = aes(x = CCA1, y = CCA2, colour = Well), alpha = 0.8, size = 8) +
+   #coord_fixed() + ## need aspect ratio of 1!
+  geom_segment(data = spp.scrs1,
+               aes(x = 0, xend = CCA1*2.5, y = 0, yend = CCA2*2.5),
+               arrow = arrow(length = unit(0.25, &quot;cm&quot;)), colour = &quot;blue&quot;, size=1) +
+  geom_text(data = spp.scrs1, aes(x = CCA1*3, y = CCA2*3, label = Vector),
+            size = 4) +
+  theme_bw() +
+  theme(axis.title=element_text(size=14), axis.text=element_text(size=14), legend.text=element_text(size=14)) +
+  #scale_color_manual(values = set_colors3, guide = guide_legend(ncol=1)) +
+  scale_color_manual(values =c(&quot;red&quot;, &quot;blue&quot;, &quot;black&quot;), guide = guide_legend(ncol=1)) +
+  #xlim(-2,3)+
+  theme(legend.position=&quot;right&quot;) 
+
+p 
+
+ggsave(&quot;output/cca_linking_env.png&quot;, width = 6, height = 4)
+</code></pre>
+
+<div class="admonition question">
+<p class="admonition-title">Question</p>
+</div>
+<p>ggplot: Triplot?
+Hint:extract species scores</p>
+<pre><code class="python">spe &lt;- scores(ord1, display = &quot;species&quot;) 
+tax &lt;- tax_table(student_data_prop_filter) 
+otu &lt;- otu_table(student_data_prop_filter) 
+abundance &lt;- rowMeans(x=otu)# calculate mean abundance of each OTU 
+df2 &lt;- data.frame(spe, tax, Abundance = abundance) 
+df2 &lt;- subset(df2, abundance &gt;=0.05) 
+</code></pre>
+
+<p>More info on model selection: https://github.com/naupaka/esa_vegan/blob/master/03-constrained-ordination/constrained-ordination.md</p>
+<h2 id="bioindicators">Bioindicators</h2>
+<pre><code class="python">biocLite(&quot;DESeq2&quot;)
+biocLite(&quot;IRanges&quot;)
+library(IRanges)
+library(DESeq2)
+library(ggpubr)
+</code></pre>
+
+<p>For this analysis, we use the count data. because this method does its own normalization
+If we only want to identy the taxa that discriminate H43 and H52</p>
+<pre><code class="python">student_data_well &lt;- subset_samples(student_data, Well!=&quot;H41&quot;)
+</code></pre>
+
+<h3 id="deseq2">DESeq2</h3>
+<p>The following two lines actually do all the complicated DESeq2 work. 
+The function phyloseq_to_deseq2 converts your phyloseq-format microbiome data into a DESeqDataSet with dispersions estimated using the experimental design formula, also shown (the ~Well term). </p>
+<pre><code class="python">dds = phyloseq_to_deseq2(student_data_well, ~ Well)
+</code></pre>
+
+<p>Then DESeq function does the rest of the testing
+    - estimation of size factors: estimateSizeFactors
+    - estimation of dispersion: estimateDispersions
+    - Negative Binomial GLM fitting and Wald statistics: nbinomWaldTest
+Wald statistics: nbinomWaldTest</p>
+<pre><code class="python">dds &lt;- DESeq(dds, test=&quot;Wald&quot;, fitType=&quot;parametric&quot;)
+</code></pre>
+
+<p>Negative Binomial GLM fitting and </p>
+<pre><code class="python">ddsLRT &lt;- DESeq(dds, test=&quot;LRT&quot;, reduced= ~ 1)
+</code></pre>
+
+<p>Check our results</p>
+<pre><code class="python">res = results(dds, cooksCutoff = FALSE)
+alpha = 0.001
+sigtab = res[which(res$padj &lt; alpha), ]
+# sigtab = sigtab[which(abs(sigtab$log2FoldChange) &gt; 2), ] # sometimes you want to report the taxa that had higher log2FoldChange than 2
+
+sigtab = cbind(as(sigtab, &quot;data.frame&quot;), as(tax_table(student_data_well)[rownames(sigtab), ], &quot;matrix&quot;))
+head(sigtab)
+</code></pre>
+
+<h4 id="plot">Plot</h4>
+<p>Phylum order</p>
+<pre><code class="python">x = tapply(sigtab$log2FoldChange, sigtab$Phylum, function(x) max(x))
+x = sort(x, TRUE)
+sigtab$Phylum = factor(as.character(sigtab$Phylum), levels=names(x))
+</code></pre>
+
+<p>Genus order</p>
+<pre><code class="python">x = tapply(sigtab$log2FoldChange, sigtab$Genus, function(x) max(x))
+x = sort(x, TRUE)
+sigtab$Genus = factor(as.character(sigtab$Genus), levels=names(x))
+</code></pre>
+
+<p>Ploting (Note: H43 is used as a control, FoldChange = H52/H43)</p>
+<pre><code class="python">sigtab$OTU &lt;- rownames(sigtab)
+ggbarplot(sigtab, x = &quot;OTU&quot;, y = &quot;log2FoldChange&quot;,
+          fill = &quot;Phylum&quot;,           # change fill color by mpg_level
+          color = &quot;white&quot;,            # Set bar border colors to white
+          palette = &quot;jco&quot;,            # jco journal color palett. see ?ggpar
+          sort.val = &quot;asc&quot;,          # Sort the value in ascending order
+          sort.by.groups = FALSE,     # Don't sort inside each group
+          ylab = &quot;log2FoldChange&quot;,
+          legend.title = &quot;Phylum&quot;,
+          rotate = TRUE,
+          ggtheme = theme_classic()
+)
+
+ggsave(&quot;output/bioindicators.png&quot;, width = 6, height = 3)
+</code></pre>
+
+<p>Show the abundance difference of the interesting taxa between the two wells</p>
+<pre><code class="python">select &lt;- rownames(sigtab)
+student_data_well_select &lt;- subset_taxa(student_data_well, rownames(tax_table(student_data_well)) %in% select[2])
+
+plot_bar(student_data_well_select, &quot;Well&quot;, fill=&quot;Genus&quot;) +
+  ylab(&quot;Sum of normalized abundance&quot;) + 
+  theme(axis.text.x = element_text(angle = -90, vjust = 0, hjust = 1))
+
+ggsave(&quot;output/bioindicators_bar.png&quot;, width = 6, height = 3)
+
+plot_heatmap(student_data_well_select, sample.label=&quot;Well&quot;, taxa.label=&quot;Genus&quot;, taxa.order=&quot;Phylum&quot;, sample.order=&quot;Well&quot;)
+</code></pre>
+
+<h3 id="random-forest">Random Forest</h3>
+<p><a href="https://rstudio-pubs-static.s3.amazonaws.com/115631_7397b7cf67534479ae80f70546610eea.html">https://rstudio-pubs-static.s3.amazonaws.com/115631_7397b7cf67534479ae80f70546610eea.html</a></p>
+<p><sub>Written by Lijuan Yan</sub>
+<sub>Oct 2018</sub></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../part4/" class="btn btn-neutral" title="Basic statistics"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../part4/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

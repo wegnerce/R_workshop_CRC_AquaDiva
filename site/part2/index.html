@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Data visualization and exploration - R from a learners perspective - Data visualization</title>
+  <title>Data manipulation - R from a learners perspective - The Küsel Lab (c) 2018</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,7 +17,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Data visualization and exploration";
+    var mkdocs_page_name = "Data manipulation";
     var mkdocs_page_input_path = "part2.md";
     var mkdocs_page_url = null;
   </script>
@@ -36,7 +36,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> R from a learners perspective - Data visualization</a>
+        <a href=".." class="icon icon-home"> R from a learners perspective - The Küsel Lab (c) 2018</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
@@ -50,51 +50,31 @@
           
             <li class="toctree-l1">
 		
-    <a class="" href="..">Data manipulation</a>
+    <a class="" href="..">From Excel to R</a>
 	    </li>
           
             <li class="toctree-l1 current">
 		
-    <a class="current" href="./">Data visualization and exploration</a>
+    <a class="current" href="./">Data manipulation</a>
     <ul class="subnav">
             
-    <li class="toctree-l2"><a href="#data-visualization-and-exploration">Data visualization and exploration</a></li>
+    <li class="toctree-l2"><a href="#data-manipulation-and-selection-with-r">Data Manipulation and Selection with R</a></li>
     
         <ul>
         
-            <li><a class="toctree-l3" href="#synopsis">Synopsis</a></li>
+            <li><a class="toctree-l3" href="#slicing-a-dataframe">Slicing a dataframe</a></li>
         
-            <li><a class="toctree-l3" href="#setting-the-stage">Setting the stage</a></li>
+            <li><a class="toctree-l3" href="#using-logical-and-conditional-operators">Using Logical and Conditional Operators</a></li>
         
-            <li><a class="toctree-l3" href="#basic-plotting">Basic plotting</a></li>
+            <li><a class="toctree-l3" href="#using-grep-to-find-search">Using grep to find / search</a></li>
         
-            <li><a class="toctree-l3" href="#base-r-data-visualization-options">Base R data visualization options</a></li>
+            <li><a class="toctree-l3" href="#sorting-data-in-r">Sorting data in R</a></li>
         
-        </ul>
-    
-
-    <li class="toctree-l2"><a href="#basic-usage-of-ggplot2">Basic usage of ggplot2</a></li>
-    
-        <ul>
+            <li><a class="toctree-l3" href="#summary-questions">Summary Questions</a></li>
         
-            <li><a class="toctree-l3" href="#ggplot2">ggplot2</a></li>
+            <li><a class="toctree-l3" href="#manipulating-and-summarizing-our-data-with-dplyr">Manipulating and Summarizing our data with dplyr</a></li>
         
-            <li><a class="toctree-l3" href="#ggplot2-versus-base-r">ggplot2 versus base R</a></li>
-        
-            <li><a class="toctree-l3" href="#basic-customizations-a-bit-about-aesthetics">Basic customizations / a bit about aesthetics</a></li>
-        
-            <li><a class="toctree-l3" href="#facetting-and-wrapping">Facetting and wrapping</a></li>
-        
-        </ul>
-    
-
-    <li class="toctree-l2"><a href="#steps-beyond">Steps beyond</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l3" href="#going-beyond-the-boxplot-correlation-plots">Going beyond the boxplot - correlation plots</a></li>
-        
-            <li><a class="toctree-l3" href="#going-beyond-the-boxplot-while-going-back">Going beyond the boxplot while going back</a></li>
+            <li><a class="toctree-l3" href="#dplyr-summary-questions">dplyr Summary Questions</a></li>
         
         </ul>
     
@@ -104,7 +84,17 @@
           
             <li class="toctree-l1">
 		
-    <a class="" href="../part3/">Basic statistics</a>
+    <a class="" href="../part3/">Data visualization and exploration</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../part4/">Basic statistics</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../part5/">Multivariate analysis</a>
 	    </li>
           
         </ul>
@@ -117,7 +107,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">R from a learners perspective - Data visualization</a>
+        <a href="..">R from a learners perspective - The Küsel Lab (c) 2018</a>
       </nav>
 
       
@@ -129,7 +119,7 @@
     
       
     
-    <li>Data visualization and exploration</li>
+    <li>Data manipulation</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -139,575 +129,417 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="data-visualization-and-exploration">Data visualization and exploration</h1>
-<h2 id="synopsis">Synopsis</h2>
-<p>In this part of the workshop you will familiarize yourself with:</p>
-<ul>
-<li>R's basic plotting capabilities</li>
-<li><em>ggplot2</em>, its syntax and fundamentals</li>
-<li>as well as some advanced data visualization</li>
-</ul>
-<p>If you have questions ASK, feel free to drop me an <a href="mailto:carl-eric.wegner@uni-jena.de">e-mail</a> also after the workshop.</p>
-<h2 id="setting-the-stage">Setting the stage</h2>
-<p>Plotting is a very personal thing (btw color schemes as well), ask three different people and you will get a variety of feedback with respect to plotting and data visualization in general. A lot of people get away with <em>Excel</em>, <em>SigmaPlot</em>, <em>GraphPad</em>, <em>Matplotlib</em> (if you are a Pythonista, which makes you a good person by default) or something else. </p>
-<p>R as its parent S is a programming language primarily dedicated to data manipulation (in a good sense) and statistical analysis. Due to its modular architecture and the availabilitry of sophisticated libraries for data processing and plotting it is an excellent choice for any kind of data visualization.</p>
-<p>When I got in touch with R the first time, I was googling options how to do a complex multi-panel figure. The original query was "plot facets vector graphics". If you do the exact same query now, you will end up with <em>ggplot2</em> being the second hit. Yep, this is how I "met" R and years later I would still lie if I would say that I'm any sort of R expert. Most of me using R is still centered around the following dogma:</p>
+                <h1 id="data-manipulation-and-selection-with-r">Data Manipulation and Selection with R</h1>
+<p>Today we will practice slicing and dicing a dataframe to grab only the data we are interested in. I am not going to exhaustively cover all the features in R for searching and manipulating data and instead this will give you a snap shot in the most common methods I use.</p>
+<p>For a more complete discussion / further investigation I highly recommend you check out <a href="http://hadley.nz/">Hadley Wickham's</a> post that can be found <a href="http://adv-r.had.co.nz/Subsetting.html">http://adv-r.had.co.nz/Subsetting.html</a>.</p>
+<p>Today we'll be covering:</p>
 <ol>
-<li>Define the problem</li>
-<li>Look up necessary R resources</li>
-<li>Apply available examples to own data</li>
-<li>Be happy after A LOT of try and error.</li>
+<li>Slicing a dataframe using row and column numbers</li>
+<li>Grabbing specific named columns or rows</li>
+<li>Identifying data based on operators (conditions)</li>
+<li>Using grep to search for specific keywords / regex</li>
+<li>Sorting data</li>
+<li>Doing all of the above with the amazing 'dplyr' package.</li>
 </ol>
-<p>Ok, first things first, fire up RStudio and check whether you have the following packages installed and load them. Throughout the course you can either execute commands from within a script (mark the respective lines of code and hit CTRL+ENTER) or directly in the console.</p>
-<pre><code>library(&quot;ggplot2&quot;)
-library(&quot;dplyer&quot;)
-library(&quot;tidyr&quot;)
-library(&quot;ellipse&quot;)
-library(&quot;RColorBrewer&quot;)
+<h2 id="slicing-a-dataframe">Slicing a dataframe</h2>
+<h3 id="specifying-row-and-column-numbers">Specifying row and column numbers</h3>
+<p>R has 5 basic data structures and we'll cover some of them today. I typically default to using data frames, and these are most similar to a two-dimensional table in excel. A matrix is a similar structure, but all the columns need to be the same type.</p>
+<p>Here I've named our data frame (df), however, you could pick any variable name you want, although try not to use special characters or already named functions.</p>
+<p>Data from a data frame can be accessed with the syntax
+dataframe[rows, columns]</p>
+<p>Hopefully the following examples will make this more clear.</p>
+<p>First import the data that we'll be using today.</p>
+<pre><code class="python">df &lt;- read.delim(&quot;simulated_dataset.txt&quot;, header=T)
 </code></pre>
 
-<p>Ideally you should see no error message popping up, if you see any then you did not prepare properly for the workshop - shame on you, or rather me, because I did not tell you in time.</p>
-<p><img alt="alt text" src="../fail.jpg" /></p>
-<h2 id="basic-plotting">Basic plotting</h2>
-<p>Enough blabla, this session is about data visualization, where are the plots? Here they come. Create a new R script, type the following two lines and execute them:</p>
-<pre><code>dotchart(rnorm(250), col = &quot;blue&quot;, main = &quot;Quick ugly example&quot;)
-hist(rnorm(250), col = &quot;blue&quot;, main = &quot;Quick ugly example II&quot;)
+<p>Try these examples:</p>
+<pre><code class="python">#Get the first 3 rows from the dataframe
+df[c(1,2,3),]
+
+#Get the first 3 columns from the dataframe
+df[,c(1,2,3)]
+
+#Get the first 3 rows and first 3 columns
+df[c(1,2,3),c(1,2,3)]
+
+#Similar to the bash command, head is a function that by default prints the first 6 rows
+head(df)
+head(df, 10)
+
+#Similarly, tail prints the last 6 rows
+tail(df)
+
+#You can chain the head function with specifying only some columns
+head(df[,c(1,2,3)])
+
+#Use the minus sign to **remove** columns or rows
+df[-c(1,2,3),]
+df[,-c(1,2,3)]
 </code></pre>
 
-<p>Alternatively type them one after another in the console.</p>
-<p>Keep an eye on the plot window, what did just happen?</p>
-<div class="admonition question">
-<p class="admonition-title">Question</p>
-<ul>
-<li>Try to figure out what the individual functions and parameters do.</li>
-</ul>
-</div>
-<p>First take home message of the day - the R help is your friend (a good one).
-The general syntax for calling R's help is:</p>
-<p><code>?functionXYZ()</code></p>
-<p>Let's start exploring R's basic plotting capabilities in a bit more detail, this is a bit of a recap of what you did yesterday. </p>
-<pre><code># Let's define two arbitrary vectors
-bacteria &lt;- c(10, 30, 60, 5, 90)
-archaea &lt;- c(25, 27, 22, 37, 10)
+<p>Now it is your turn, try to answer the following questions:</p>
+<p>&#49;.   Grab the 1st, 3rd, and 5th rows of our data frame.<br />
+&#50;. Get all data except the 3rd column.<br />
+&#51;. Retrieve the last 6 rows.<br />
+&#52;. Get the "SampleID", "Well", "Month", "PH", "DO", and "DOC" from all samples from the "HTU" aquifer and store the data in a new dataframe named "df_HTU".  </p>
+<p>As a quick aside, we can use the rbind() function to combine two dataframes by rows.
+Try the following:</p>
+<pre><code class="python">df1 &lt;- df[c(1,2,3),]
+df2 &lt;- df[c(28, 29, 30),]
 
-# Plot them both
-plot(bacteria, type=&quot;o&quot;, col = &quot;orange&quot;)
-lines(archaea, type=&quot;o&quot;, pch=22, lty=2, col = &quot;blue&quot;)
+#Use rbind to merge these 2 sliced dataframes
+df3 &lt;- rbind(df1, df2)
 
-axis(1, at=1:5, lab=(c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;)))
+#Or you can get the same result with these 2 commands:
+df3 &lt;- df[c(1,2,3,28,29,30),]
+df3 &lt;- df[c(seq(1,3), seq(28,30)),]
 </code></pre>
 
-<p>Let's say what we just plotted are relative abundances for archaea and bacteria across different months. But the output looks like garbage, apparently we had at first default x-axis labels, which were overwritten. The result is this "beauty" of a plot.</p>
-<p>How to fix that, take a look at the following code:</p>
-<pre><code>plot(bacteria, type=&quot;o&quot;, col = &quot;orange&quot;, axes=FALSE, ann = FALSE)
-lines(archaea, type=&quot;o&quot;, pch=22, lty=2, col = &quot;blue&quot;)
-
-axis(1, at=1:5, lab=(c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;)))
+<h3 id="using-ranges-and-formulas-to-slice-a-data-frame">Using ranges and formulas to slice a data frame</h3>
+<p>Instead of specifying each row or column number, we can also generate these based on a range of numbers or by using functions in R that generate a vector of numbers</p>
+<p>For example:</p>
+<pre><code class="python">#Grab columns 3 through 5
+df[,3:5]
+#Same outcome, but we can specify directly that the range is a vector
+df[,c(3:5)]
+#We can mix specifying numbers and generating a range
+df[c(1,2,10:15,19),]
+#Try
+df[1,2,10:15,19,]
 </code></pre>
 
-<p>Does that make it any better? What is now missing?</p>
-<div class="admonition exercise">
-<p class="admonition-title">Exercise</p>
-<ul>
-<li>Call the help for axis(), box(), title(), and legend. </li>
-<li>Add a y-axis, a box around the plot, titles for the plot as well as the two axes, and a legend. </li>
-</ul>
-</div>
-<p>One possible solution:</p>
-<pre><code>plot(bacteria, type=&quot;o&quot;, col = &quot;orange&quot;, axes=FALSE, xlab = &quot;Month&quot;, ylab = &quot;Rel. abundance [%]&quot;, main = &quot;Bac and Arc&quot;)
-lines(archaea, type=&quot;o&quot;, pch=22, lty=3, col = &quot;blue&quot;)
-axis(1, at=1:5, lab=(c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;)))
-box()
-axis(2, las = 2)
-legend(1, max(bacteria), c(&quot;Bacteria&quot;, &quot;Archaea&quot;), cex=0.8, col=c(&quot;orange&quot;, &quot;blue&quot;), 
-       pch=c(21,22), lty=c(1,3))
+<p>Once you get more familiar with some R functions that generate vectors we can also chain these together to specify rows or columns</p>
+<pre><code class="python">df[,seq(1,ncol(df), by=3)]
 </code></pre>
 
-<p>Alright, so far we played with a dataset that we quickly created, as you already learned before you can easily import datasets like this from any delimited file. Imagine a file like this (e.g. table.tsv):</p>
-<table>
-<thead>
-<tr>
-<th>bacteria</th>
-<th>archaea</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>10</td>
-<td>25</td>
-</tr>
-<tr>
-<td>30</td>
-<td>27</td>
-</tr>
-<tr>
-<td>60</td>
-<td>22</td>
-</tr>
-<tr>
-<td>5</td>
-<td>37</td>
-</tr>
-<tr>
-<td>90</td>
-<td>10</td>
-</tr>
-</tbody>
-</table>
-<p>Two columns, tab-delimited, and the columns have names ("bacteria2, "archaea").</p>
-<p>We could read this file as outlined below. </p>
-<pre><code># Read the table, pay attention to the header and sep arguments
-rel_prok &lt;- read.table(&quot;table.tsv&quot;, header=T, sep=&quot;\t&quot;)
-
-# Instead we merge our two vectors because you did a lot of importing yesterday...
-rel_prok &lt;- data.frame(bacteria, archaea)
-colnames(rel_prok) &lt;- c(bacteria, archaea)
-
-# We define colors to be used with our data series, because why not
-plot_colors &lt;- c(&quot;blue&quot;, &quot;orange&quot;)
-
-# We initiate a PNG devide to save the output
-png(filename=&quot;output.png&quot;, height=250, width=300, bg=&quot;white&quot;)
-
-# AND NOW?!
-# Adapt your code
-# and end it with
-dev.off()
-# to turn off the PNG device
+<p>&#53;. What is the seq command?<br />
+&#54;. What is the ncol command?  </p>
+<pre><code class="python">df[,seq(1,length(df), by=3)]
 </code></pre>
 
-<div class="admonition exercise">
-<p class="admonition-title">Exercise</p>
-<ul>
-<li>Plot the data as before, and save the output as a .png.</li>
-<li>Do you have to adjust the dimensions?</li>
-<li>What is the dev.off() function doing?</li>
-</ul>
-</div>
-<h2 id="base-r-data-visualization-options">Base R data visualization options</h2>
-<p>So far we basically only did line charts, base R provides us however with a whole range of different visualization options. </p>
-<p>Let's take one of our vectors and see how we can create bar charts and how we can visualize both data series by dot charts.</p>
-<p>Bar charts:</p>
-<pre><code>bacteria &lt;- c(10, 30, 60, 5, 90)
-
-# A simple bar plot
-barplot(bacteria, main=&quot;Bacteria relative abundance&quot;, xlab=&quot;Month&quot;,
-   ylab=&quot;Rel. abundance [%]&quot;, names.arg=c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;))
-
-# Simple, and slightly pimped, pattern fill
-barplot(bacteria, main=&quot;Bacteria relative abundance&quot;, xlab=&quot;Month&quot;,  
-   ylab=&quot;Rel. abundance [%]&quot;, names.arg=c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;), 
-   border=&quot;gray&quot;, density=c(10,20,30,40,50))
-
-# Add a box around the plot because we like boxes
-box()
-
-# This time with colors
-barplot(bacteria, main=&quot;Bacteria relative abundance&quot;, xlab=&quot;Month&quot;,  
-        ylab=&quot;Rel. abundance [%]&quot;, names.arg=c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;),
-        col=rainbow(5))
+<p>&#55;. What is the difference between length and ncol here?<br />
+&#56;. How would you select a range of rows that represent the last 5 rows in the dataframe?<br />
+Answer:</p>
+<pre><code class="python">df[c((length(df)-5):length(df)),]
 </code></pre>
 
-<p>And a dot chart:</p>
-<pre><code># Plot the dotchart
-dotchart(t(rel_prok), color=c(&quot;blue&quot;, &quot;red&quot;), main=&quot;Dotchart Bacteria and Archaea&quot;)
+<p>And again, we can chain these together into a vector:</p>
+<pre><code class="python">df[c(1,2,seq(3,11, by=1)),]
 </code></pre>
 
-<p>We finish this first session with a little exercise.</p>
-<div class="admonition exercise">
-<p class="admonition-title">Exercise</p>
-<p>Use the simple dataset to plot a grouped bar chart incl. a legend and a dot chart with months as row names. Export both as .png files. <em>NOT</em> using RStudio's export function.</p>
-</div>
-<p>For more examples of using the plotting capabilities of base R have a look for instance <a href="https://www.harding.edu/fmccown/r/">here</a>.</p>
-<p>Solutions:</p>
-<pre><code># Grouped bar chart
-barplot(as.matrix(rel_prok), main=&quot;Bac vs Arc&quot;, ylab= &quot;Rel. abundance&quot;,
-        beside=TRUE, col=rainbow(5))
-box()
+<p>Try to fix these commands:<br />
+&#49;&#48;. df[1,2,seq(3,11,2),]<br />
+&#49;&#49;. Why do you not need to specify "by"?<br />
+&#49;&#50;. df[c(1:5,seq(7,10)]  </p>
+<h3 id="splicing-a-data-frame-by-using-column-andor-row-names">Splicing a data frame by using column and/or row names</h3>
+<p>Here we're using R conventions/shortcuts to pull out specific vectors based on their name.
+To start off with lets look at functions that view the names</p>
+<pre><code class="python">#Look at the column names
+colnames(df)
 
-# Place the legend at the top-left corner with no frame  
-# using rainbow colors
-legend(&quot;topleft&quot;, c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;), cex=1, 
-       bty=&quot;n&quot;, fill=rainbow(5))
+#Look at the row names
+rownames(df)
+
+#What does this do?
+names(df)
 </code></pre>
 
-<pre><code># Dot chart with months as labels
-row.names(rel_prok) &lt;- c(&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;)
-rel_prok
-dotchart(t(rel_prok), color=c(&quot;blue&quot;, &quot;red&quot;), main=&quot;Dotchart Bacteria and Archaea&quot;, cex = 1)
+<p>Lets try some examples:</p>
+<pre><code class="python"># Grab columns &quot;SampleID&quot; and &quot;PH&quot;
+df[,c(&quot;SampleID&quot;, &quot;PH&quot;)]
+
+# What is the difference in the following 2 commands?
+df[c(1,2,3),]
+df[c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;),]
 </code></pre>
 
-<h1 id="basic-usage-of-ggplot2">Basic usage of ggplot2</h1>
-<h2 id="ggplot2">ggplot2</h2>
-<p>Base R's plotting capabilities are not bad, but the bottom line is, even with a lot of tweaking the resulting plots are visually rather less appealing. When you are dealing with your data, you want to present it in the best possible/convincing way. Often when I read papers and I see mediocre figures I think one thing, namely: "RESPECT YOUR DATA!". Investing time in in proper plotting/visualization/beautifying is usually more than worth it as it pays off in multiple regards.</p>
-<p>Luckily, there are a multitude of R packages that provide us with almost unlimited options of data visualization. The most common one is <em>ggplot2</em>, which was created and is maintained by <a href="https://hadley.nz/">Hadley Wickham</a>. Hadley is incredibly active in the R scene and maintains a lot of popular R packages/tools including:</p>
-<ul>
-<li>dplyr</li>
-<li>tidyr</li>
-<li>stringr</li>
-<li><em>ggplot2</em></li>
-</ul>
-<p>to name a few. He is also one of the main persons behind <a href="https://www.rstudio.com/">RStudio</a>.</p>
-<h2 id="ggplot2-versus-base-r">ggplot2 versus base R</h2>
-<p>Plotting in base R can be mostly done using data stored in vectors. In comparison, <em>ggplot2</em> relies on dataframes. Let's have a look at one of these as a quick reminder:</p>
-<pre><code class="R">data(mtcars)
-head(mtcars)
-      mpg cyl disp  hp drat    wt  qsec vs am gear carb
-Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
-Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
-Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+<p>Example Questions:<br />
+&#49;&#51;. Get a dataframe with the SampleID and the Zone only.<br />
+&#49;&#52;. Retrieve a dataframe with the sampleID and all continuous data columns.<br />
+&#49;&#53;. Get a dataframe with Samples 1 through 6 with SampleID, Aquifer, TOC and TIC.  </p>
+<h2 id="using-logical-and-conditional-operators">Using Logical and Conditional Operators</h2>
+<p>We can also select only rows or columns that match some condition we want. This can be something like all rows where the PH is less than 5, or all wells that match a specific value / string.</p>
+<p>But to start off with, lets go over some terms and syntax.<br />
+We can refer to a column (vector) from a dataframe using the established shortcut dataframe-name$column-name. For example:</p>
+<pre><code class="python">df$SampleID
+df$PH
 </code></pre>
 
-<p>Dataframes are nothing else but lists of vectors of equal lengths. It we take a qick look at our workshop mock data, are we dealing with a dataframe as well?</p>
-<pre><code class="R">aqd_mock &lt;- read.table(&quot;simulated_dataset.txt&quot;, header=T, sep=&quot;\t&quot;, row.names = &quot;SampleID&quot;)
-head(aqd_mock)
- Well Month Season Cluster Zone Aquifer TEMP_W_ES  EC     EC25   PH   DO NH4 PO4 DOC TOC   TIC   NO3   SO4  Cl   Ca
-Sample1  H41   Mar Spring       2  HTL     HTL       4.4 455 113.7800 7.41 6.41 0.0 0.4 1.3 1.3 36.81 24.34 21.86 5.6 34.7
-Sample2  H41   Jun Summer       2  HTL     HTL       4.5 465 113.2046 8.21 5.50 0.1 0.1 1.1 1.2 37.45 19.29 15.33 5.8 33.7
-Sample3  H41   Aug Summer       2  HTL     HTL       4.7 444 108.1701 7.31 3.71 0.2 0.9 1.7 1.8 32.23 12.98 19.24 5.6 30.9
-Sample4  H41   Nov Autumn       2  HTL     HTL       4.8 449 110.1839 7.31 3.20 0.2 0.1 1.5 1.7 35.84 12.04 16.49 5.7 30.3
-Sample5  H41   Feb Winter       2  HTL     HTL       3.9 457 115.9376 7.21 6.99 0.0 1.1 0.7 0.8 34.27 23.79 26.22 5.9 35.4
-Sample6  H41   May Spring       2  HTL     HTL       4.8 477 116.3691 7.31 7.83 0.0 2.4 0.7 0.7 35.37 26.71 23.91 5.6 36.0
-         Fe    Mg   Mn  Na
-Sample1 0.0 23.17 0.00 3.0
-Sample2 0.0 24.51 0.00 2.0
-Sample3 5.2 29.54 0.35 3.5
-Sample4 1.4 29.00 0.34 3.3
-Sample5 6.0 23.90 0.09 3.5
-Sample6 2.7 21.95 0.09 1.6
+<p>Lets also quickly cover some of tools we can use to test our conditions<br />
+Relational Operators (Guess what they mean)<br />
+<em> ==  <br />
+</em> !=  <br />
+<em> &lt; <br />
+</em> &gt;<br />
+<em> &lt;=<br />
+</em> &gt;=  </p>
+<p>Logical Operators<br />
+<em> &amp;<br />
+</em> !<br />
+* |  </p>
+<p>Only checks the first element<br />
+<em> &amp;&amp;<br />
+</em> ||  </p>
+<p>OK, probably pretty confusing, but lets go over some examples that should make these concepts more clear.</p>
+<pre><code class="python">df$PH &lt; 10
+which(df$PH &lt; 10)
+#Whats the difference?
+
+
+df[df$PH &lt; 10, ]
+df[which(df$PH &lt; 10),]
+#What is R doing in the above commands?
+
+
+df$SampleID == &quot;Sample13&quot;
+which(df$SampleID == &quot;Sample13&quot;)
+df[which(df$SampleID == &quot;Sample13&quot;),]
+
+df$PH &lt; 10
+df$SampleID ==&quot;Sample13&quot;
+
+#Combining conditions
+df$PH &lt; 10 &amp; df$SampleID == &quot;Sample13&quot;
+
+#example for '&amp;' vs '&amp;&amp;'
+df$PH &lt; 10 &amp;&amp; df$SampleID == &quot;Sample13&quot; 
+#checks to see if both boolean vectors are the same, returns single value
+
+df$PH &lt; 10 | df$SampleID == &quot;Sample13&quot;
+
+#Think about what each of the following statements is doing. It can be helpful to translate these into English / German in your head or on paper.
+df[df$DO &gt; 0 &amp; df$NH4 &gt; 0.1,]
+#For dataframe named df, return rows where the column DO values are greater than 0 AND where values from column NH4 are greater than 0.1; return all columns
+
+df[which(df$DO &gt; 0 &amp; df$NH4 &gt; 0.1),]
+df[df$DO &gt; 0 &amp; df$NH4 &lt; 0.2 &amp; df$Season == &quot;Summer&quot;,]
+df[which(df$DO &gt; 0 &amp; df$NH4 &lt; 0.2 &amp; df$Season == &quot;Summer&quot;),]
+
+#What does this command return? Can you translate it?
+df[which(df$DO &gt; 0 &amp; df$NH4 &lt; 0.2 | df$Season == &quot;Summer&quot;),]
+
+#Some more complicated examples
+df[which(df$PH &lt;= 7.41 &amp; df$TOC &lt; 1.4 &amp; df$TOC &gt; 1.2),]
+df[which(df$PH &lt; 7.1 | df$PH &gt; 8.1),]
 </code></pre>
 
-<p>Apparently we do. BTW:</p>
-<div class="admonition question">
-<p class="admonition-title">Question</p>
-<ul>
-<li>Why do we add the "header" and "row.names" parameters?</li>
-</ul>
-</div>
-<p>Besides from the usage of dataframes, the second key characteristics of <em>ggplot2</em> is that you work with layers. Basically, every <em>ggplot2</em> object is like a canvas and we keep painting on it by adding layers, aka geoms.</p>
-<pre><code class="R">library(&quot;ggplot2&quot;)
-# Initialize a ggplot object
-ggplot(aqd_mock, aes(x=Zone, y=Fe))
+<p>Just as a comment, R is great because you can save a lot of the intermediate steps. If you find yourself getting lost in the statements, separate them out. Make sure that you reference the correct dataframe in each of the steps though!</p>
+<pre><code class="python">df_working &lt;- df
+df_working &lt;- df_working[df_working$PH &lt;= 7.41,]
+#MAKE SURE YOU USE THE CORRECT REFERENCE!!!!
+
+df_working &lt;- df_working[df_working$TOC &lt; 1.4,]
+df_working &lt;- df_working[df_working$TOC &gt; 1.2,]
+#Did this give you the same answer? How can you check?
 </code></pre>
 
-<p>Thats our canvas, and yes so far it is fairly empty. We have to fill it by adding the aforementioned <em>geom</em> objects, before we take a look at the overall <em>ggplot2</em> syntax.</p>
-<pre><code>ggplot(
-  data = &lt;some_data_frame&gt;,
-  mapping = aes(
-    x = &lt;some_column&gt;,
-    y = &lt;some_other_column&gt;,
-    random aesthetics = &lt;based_on_a_random_parameter&gt;
-    )
-  ) +
-  geom_&lt;some_plot_type&gt;()
+<h2 id="using-grep-to-find-search">Using grep to find / search</h2>
+<p>grep is a command-line program that search for lines that match a regular expression. We can use the R implementation of grep to search vectors for elements that match a regular expression / keyword.</p>
+<p>The syntax is grep(PATTERN, vector).</p>
+<p>Lets look at some examples:</p>
+<pre><code class="python">#Search for values containing &quot;HTU&quot; in the vector df$Zone
+df[grep(&quot;HTU&quot;, df$Zone),]
+
+#Here is an example of a simple regular expression, it reads search for &quot;HTU4&quot; OR &quot;HTU5&quot; within the vector df$Zone
+df[grep(&quot;HTU4|HTU5&quot;, df$Zone),]
+
+#A more complicated regex, search for a string that ends with a two-digit number within the SampleID
+df[grep(&quot;.*[0-9]{2}&quot;, df$SampleID),]
+#The &quot;.*&quot; means match anything.
+
+#What is this one doing?
+df[c(grep(&quot;.*er&quot;, df$Season), grep(&quot;Autumn&quot;, df$Season)),]
 </code></pre>
 
-<p>Now we add some content.</p>
-<pre><code class="R">ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point()
+<p>A word of caution. I often find myself doing stupid stuff like:</p>
+<pre><code class="python">df[grep(&quot;Sample2[0-9]&quot;,df$SampleID),][df[grep(&quot;Sample2[0-9]&quot;,df$SampleID),]$DO &lt; 0.1,]
 </code></pre>
 
-<p>We just created our first <em>ggplot2</em> plot. Whoa.</p>
-<p><img alt="alt text" src="../it_works.jpeg" /></p>
-<h2 id="basic-customizations-a-bit-about-aesthetics">Basic customizations / a bit about aesthetics</h2>
-<p>Lets be more serios, our dataset spans data from different seasons. One obvious question is whether we can identify differences over the year? Let's find out and color our dots according to season.</p>
-<pre><code class="R"># A touch of color
-ggplot(aqd_mock, aes(x=Well, y=Fe, col = Season)) + geom_point()
+<p>Can you figure out what is going on? It is messy, ugly, and hard to read. Seeing code like this in your Rscripts is always sad since it will take you much longer to figure out what you were doing, and it will likely obscure bugs in your code.</p>
+<p>It would be better to split your commands up:</p>
+<pre><code class="python">df_sample20_up &lt;- df[grep(&quot;Sample2[0-9]&quot;,df$SampleID),]
+df_sample20_up[df_sample20_up$DO &lt; 0.1,]
 </code></pre>
 
-<p>We can use this simple example to learn more about how <em>ggplot2</em> aesthetics work.</p>
-<pre><code>ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(col = Season))
-ggplot(aqd_mock, aes(x=Zone, y=Fe, col = Season)) + geom_point(colour = &quot;Black&quot;)
-
-# Why does the following not work?
-ggplot(aqd_mock, aes(x=Zone, y=Fe, col = Season)) + geom_point(aes(col = &quot;Black&quot;))
-
-# A second variable to modify aesthetics
-ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(col = Season, shape = Well))
-
-# That does not make so much sense hm?
-ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(col = Season, shape = Aquifer))
-ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(fill = Season, shape = factor(Aquifer), alpha = .6, size = 5), colour = &quot;Black&quot;) + scale_shape_manual(values=c(21,22))
-
-# Getting rid of some legends
-ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(fill = Season, shape = factor(Aquifer), alpha = .6, size = 5), colour = &quot;Black&quot;) + scale_shape_manual(values=c(21,22)) + guides(size = FALSE, alpha = FALSE)
-# Success
+<p>&#49;&#54;. Get all data that was collected during June and July.</p>
+<h2 id="sorting-data-in-r">Sorting data in R</h2>
+<p>Confusingly, you will almost always use the <strong>order()</strong> command to sort your data in R. Order gives you a vector with indices of the sorted data, while sort gives you the actual sorted vector.</p>
+<p>For example:</p>
+<pre><code class="python">sort(df$SampleID)
+order(df$SampleID)
 </code></pre>
 
-<p>Ah well, so far nothing really obvious, however right now it is really hard to tell. Let's try to 
-visualize this better.</p>
-<div class="admonition exercise">
-<p class="admonition-title">Exercise</p>
+<p>In general, we use the vector that order returns to sort the full dataframe.</p>
+<p>So we can do stuff like this:</p>
+<pre><code class="python">#Sort the dataframe based on the values in column &quot;SampleID&quot;
+df[order(df$SampleID),]
+#What happened here?
+
+#Sort using a numeric value
+df[order(row.names(df), decreasing = T),]
+df[order(as.numeric(row.names(df)), decreasing = T),]
+
+#If we didn't have a numeric column to sort on we can split apart a column to sort on
+df[order(as.numeric(gsub(&quot;Sample&quot;, &quot;&quot;, df$SampleID)), decreasing = T),]
+#Here I am using gsub, the find &amp; replace version of grep, to replace &quot;Sample&quot; with &quot;&quot; (nothing), then I'm telling R that these are numbers &amp; not characters, finally I tell it to order these numbers from highest to lowest.
+
+#Why does R sort these numerically by default?
+df[order(df$PH),]
+
+#You can check the type of vector you have with:
+str(df$PH)
+#Or to check all vectors in a dataframe you can use
+str(df)
+</code></pre>
+
+<p>Sometimes you want to sort using multiple columns. Order allows you to specify multiple columns and it will sort your data in that order.</p>
+<pre><code class="python">df[order(df$PH, df$DO),]
+df[order(df$PH, -df$DO),]
+</code></pre>
+
+<p>This question came up when I was working on this dataset and I think it is a fairly typical question.<br />
+How can we order our dataset based on Months?</p>
+<p>Lets check what we are starting with:</p>
+<pre><code class="python">df$Month
+</code></pre>
+
+<p>It seems like all are the common 3 letter abbreviations, except July <strong>(There are ALWAYS exceptions in your data)</strong></p>
+<p>Lets fix that:</p>
+<pre><code class="python">df[df$Month == &quot;July&quot;,]$Month &lt;- &quot;Jul&quot; #Gives error, missing values are not allowed
+</code></pre>
+
+<p>OK, that didn't work. What happened?<br />
+Unfortunately it messed up the whole dataframe by adding NAs. Lets reload the data first.</p>
+<pre><code class="python">df &lt;- read.delim(file = &quot;simulated_dataset.txt&quot;, header=T)
+</code></pre>
+
+<p>So after googling, I relearned that changing the values of "factors" to a new value doesn't work well. Lets change months to a "character" data type.</p>
+<pre><code class="python">df$Month &lt;- as.character(df$Month)
+</code></pre>
+
+<p>Now we can try to make the substitution:</p>
+<pre><code class="python">df[df$Month == &quot;July&quot;,]$Month &lt;- &quot;Jul&quot;
+</code></pre>
+
+<p>Success!!  </p>
+<p>Now we need to tell R how we want the data organized. I couldn't think of a good way to order Months alphabetically in a manner that works. But luckily R has a defined vector of the common 3 letter abbreviations, and it is already sorted.</p>
+<p>We can use this defined order, to structure our df$Month column. Here I am telling R to treat Months as a factor again, and then defining the order of the values of that factor. I know this is confusing, I typically google how to do this every time. It is extremely useful though, since many of the graphing packages order your data based on the factor levels.</p>
+<pre><code class="python">df$Month &lt;- factor(df$Month, levels = month.abb)
+</code></pre>
+
+<p>Now we can order the full dataframe based on our Month factor:</p>
+<pre><code class="python">df[order(df$Month, decreasing = F),]
+</code></pre>
+
+<p>Yes, I still think it is MAGIC that this works. Seriously.</p>
+<h2 id="summary-questions">Summary Questions</h2>
 <ol>
-<li>Check out geom_boxplot() via ?geom_boxplot()</li>
-<li>Plot box plots combined with dot plots for the Fe content at the different wells, using the season as grouping. </li>
-<li>Try out geom_violin() as well.</li>
+<li>List the names for each of the data columns in df.</li>
+<li>What is the name of the 3rd column in df.</li>
+<li>Get the 9-12 rows and 4-10 columns from df.</li>
+<li>Which samples from well H41 have TOC values less than 0.8?</li>
+<li>Make a new dataframe that only contains samples collected from the "HTL" aquifer.</li>
+<li>Using  this new dataframe, which samples had a higher temperature than 4.5?</li>
+<li>Make another new dataframe that consists of 10 samples, 5 with the lowest NO3 and 5 with the highest NO3 measurements.</li>
+<li>Re-order the original dataframe by PO4, with the lowest value at the top.</li>
+<li>Re-order the original dataframe by PO4 and Mg, with the highest values at the top.</li>
+<li>Re-order the original dataframe by PO4 with the highest values at the top, and then by Mg with the lowest values at the top.</li>
+<li>Do the same as above, but reverse the order (Mg first, then PO4).</li>
+<li>Rename the samples "AquaDivaN" when N is 1 to 30.</li>
+<li>
+<p>Make 4 new dataframes, 1 for each season.</p>
+</li>
+<li>
+<p>Any other ways of manipulations data that you want / need?</p>
+</li>
 </ol>
-</div>
-<p>Does that that help, do we see differences across season now?</p>
-<pre><code># A first boxplot
-ggplot(aqd_mock, aes(x=Well, y=Fe)) + geom_boxplot(alpha = .6) +
-  geom_point(aes(fill=Season ,size = 5, shape = factor(Aquifer), alpha = .6), colour = &quot;Black&quot;, position = position_jitterdodge()) + scale_shape_manual(values=c(21,22)) + guides(size = FALSE, alpha = FALSE)
-
-# And now grouped
-ggplot(aqd_mock, aes(x=Well, y=Fe)) + geom_boxplot(aes(fill = factor(Season), alpha = .6)) +
-  geom_point(aes(fill=Season ,size = 5, shape = factor(Aquifer), alpha = .6), colour = &quot;Black&quot;, position = position_jitterdodge()) + scale_shape_manual(values=c(21,22)) + guides(size = FALSE, alpha = FALSE, fill=guide_legend(title=&quot;Season&quot;), shape = guide_legend(title=&quot;Aquifer&quot;))
+<h2 id="manipulating-and-summarizing-our-data-with-dplyr">Manipulating and Summarizing our data with dplyr</h2>
+<p>dplyr is a very helpful package that is specifically designed to work on dataframes and work <strong>QUICKLY</strong>. It is the updated version of plyr.
+I recommend checking out the following link for some ways to user dplyr.<br />
+<a href="https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html">https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html</a></p>
+<p>We'll go through the basic syntax dplyr uses and some examples.</p>
+<pre><code class="python">library(dplyr)
+#reload the dataframe if necessary
+df &lt;- read.delim(&quot;simulated_dataset.txt&quot;, header=T)
 </code></pre>
 
-<div class="admonition question">
-<p class="admonition-title">Question</p>
-<ul>
-<li>What is the parameter "position" good for?</li>
-</ul>
-</div>
-<p>In the beginning we talked about pretty figures, I do not know about you, but I strongly dislike the default <em>ggplot2</em> theme (you should as well). How can we get rid of this grey background and white gridlines?</p>
-<pre><code>last_plot() + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+<h3 id="filter-the-dataframe">Filter the dataframe</h3>
+<p>Here we can grab the rows that match criteria we set. This is similar to the conditional operators we used in the above section.</p>
+<p>Note: the %&gt;% symbol can be read as a "pipe" where we are chaining together a series of commands.</p>
+<pre><code class="python">df %&gt;% filter(Season == &quot;Summer&quot;)
+df %&gt;% filter(Season ==&quot;Summer&quot; &amp; DO &lt; 0.4)
+df %&gt;% filter(Well != &quot;H41&quot; &amp; PH &gt; 7.4 &amp; DOC &lt; 2)
+
+filter(df, Season == &quot;Summer&quot;)
 </code></pre>
 
-<p>That is better, at least a bit. Now we want to add/modify in additon the title and the axis labels of the plot.</p>
-<pre><code>last_plot() + labs(title=&quot;AquaDiva mock data&quot;, subtitle=&quot;Iron content&quot;, y=&quot;Fe [mg/L]&quot;, x=&quot;Well&quot;, caption=&quot;(c) CEW&quot;)
+<h3 id="sort-the-dataframe">Sort the dataframe</h3>
+<p>We can use the arrange command in dplyr to sort our dataframe. This may be easier to remember than order.</p>
+<pre><code class="python">df %&gt;% arrange(desc(DO), desc(NH4), Month)
 </code></pre>
 
-<p>Not bad, really not bad.</p>
-<p>The last_plot() function is incredibly useful when you are continuously working on a figure. BUT, what do we see our seasons are not properly ordered. Even in a world of climate change, autumn is not before spring and summer. We covered that yesterday.</p>
-<div class="admonition exercise">
-<p class="admonition-title">Exercise</p>
-<ul>
-<li>Fix the order of the seasons.</li>
-</ul>
-</div>
-<p>Here we go.</p>
-<pre><code>seasons &lt;- (&quot;Spring&quot;, &quot;Summer&quot;, &quot;Autumn&quot;, &quot;Winter&quot;)
-aqd_mock$Season = factor(aqd_mock$Season, levels = seasons)
+<h3 id="select-columns-from-the-dataframe">Select columns from the dataframe</h3>
+<pre><code class="python">df %&gt;% select(SampleID, DO, PH, Mg, Season)
+df %&gt;% select(SampleID, TEMP_W_ES:Na)
+df %&gt;% select(-(Well:Aquifer))
+
+df %&gt;% select(SampleID, starts_with(&quot;EC&quot;))
 </code></pre>
 
-<p>Given that we have the package RColorBrewer loaded, we can also fairly easy manipulate the colors of our boxplot.</p>
-<pre><code># Playing around with colors thanks to RColorBrewer
-last_plot() + scale_fill_brewer(palette=&quot;Set1&quot;)
-last_plot() + scale_fill_brewer(palette=&quot;Set2&quot;)
-last_plot() + scale_fill_brewer(palette=&quot;Blues&quot;)
+<h3 id="add-new-columns-based-on-functions-of-previous-columns">Add new columns based on functions of previous columns</h3>
+<p>Many times you will import a relatively simple dataset into R and then want to perform several calculations using that data. For instance you want to convert date / time column to "Hours since start", or you want to convert you absorbance data to counts based on a standard curve, etc...</p>
+<p>Here we can use dplyr to run those calculations and add the result to a new column.<br />
+This example will convert our DO measurements to percent oxygen saturation.</p>
+<pre><code class="python">df &lt;- df %&gt;% mutate(TEMP_K = TEMP_W_ES + 273.15)
+#DO Saturation Formula assuming salinty is 0:
+#  exp(-173.4292 + 249.6339*100/T + 143.3483*ln(T/100) + - 21.8492 * (T/100))
+
+df &lt;- df %&gt;% mutate(DO_sat = exp(-173.4292 + (249.6339*100/TEMP_K) + (143.3483*log(TEMP_K/100)) + (-21.8492 * (TEMP_K/100))))
+df &lt;- df %&gt;% mutate(O2_perc = DO / DO_sat * 100)
+
+df %&gt;% select(SampleID:Aquifer, O2_perc)
 </code></pre>
 
-<h2 id="facetting-and-wrapping">Facetting and wrapping</h2>
-<p>You have probably noticed that we are obviously dealing with a dataset that comprises a bunch of different variables. </p>
-<p>Lets shortly talk about types of variables, what types come to your mind?</p>
-<p>Some examples:</p>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>categorical</td>
-<td>variables that can be put in categories, e.g. male and female</td>
-</tr>
-<tr>
-<td>discrete</td>
-<td>variables that are limited to a certain number of values, e.g. grades in school</td>
-</tr>
-<tr>
-<td>measurement</td>
-<td>variables that can be measured and given a number, e.g. ...</td>
-</tr>
-<tr>
-<td>ordinal</td>
-<td>categorical variables that can be ordered, e.g. low, medium, high diversity</td>
-</tr>
-<tr>
-<td>ranked</td>
-<td>ordinal variables where every point can be ordered, e.g. OTU ranks</td>
-</tr>
-</tbody>
-</table>
-<p>Imagine the following scenario, we now know that there are differences across season for the Fe-content in the different wells. Now we want to do the same plot for all our measurement variables. </p>
-<p><img alt="alt text" src="../darkside_II.jpeg" /></p>
-<p>How do we do that?!</p>
-<p>What we have to do is known as facetting. For that we can make use of two different <em>ggplot2</em> functions, facet_wrap() and facet_grid(), with the differencing being the number of facetting dimensions. A quick example for facet_wrap():</p>
-<pre><code># We load the ggplot2 dataset mtcars
-data(mtcars)
-# And do some wrapping
-ggplot(data = mtcars, mapping = aes(x = hp, y = mpg)) + geom_point() + facet_wrap(~ cyl, scales = 'free_x')
+<p>There is also a function in case we only care about the results and don't want to add it to the exisiting dataframe.</p>
+<pre><code class="python">#Save only new column
+df %&gt;% transmute(O2_perc = DO / DO_sat*100)
 </code></pre>
 
-<p>And for facet_grip():</p>
-<pre><code>ggplot(data = mtcars, mapping = aes(x = hp, y = mpg)) + geom_point() + facet_grid(am ~ cyl, scales = 'free_x')
+<h3 id="summarise-summarize">Summarise / Summarize</h3>
+<p>This is usually how I end up using dplyr. It is an incredibly powerful way of quickly calculating summary statistics on your data while you try and explore what is going on. This would be analagous to using pivot tables in excel.</p>
+<p>I find the dplyr syntax really nice for reading exactly what you are doing.</p>
+<p>For example, we can calculate per Well statistics for a specific variable of interest.</p>
+<pre><code class="python">df %&gt;% group_by(Well) %&gt;% summarize(mean_O2_perc = mean(O2_perc), sd_o2_perc = sd(O2_perc))
+#Take the dataframe df, split into smaller dataframes on the fly based on the values found in the df$Well column. Run the summarise() function on each of the these smaller dataframes to calculate the mean and standard deviation for O2 percent.
 </code></pre>
 
-<p>For detailed examples about facetting I recommend these links <a href="https://stcorp.nl/R_course/tutorial_ggplot2.html">click me</a> and <a href="https://plot.ly/ggplot2/facet/">me too</a>.</p>
-<p>All nice and well, but how do we apply that to our mock data?</p>
-<pre><code>head(aqd_mock)
+<p>We can do something similar and calculate season based statistics:</p>
+<pre><code class="python">df %&gt;% group_by(Season) %&gt;% summarize(n = n(), mean_PH=mean(PH), mean_TOC=mean(TOC))
+#Split dataframe df into smaller dataframes based on the values in the column &quot;Season&quot;, the summarize these smaller dataframes by calculating the number of samples (n), and the mean for PH and TOC
 </code></pre>
 
-<p>We have a couple of rather descriptive variables (Well, Cluster, Zone, Aquifer) and a bunch of measurement variables (e.g. PH, DO, Na, TIC, TOC, DOC). So in principle what we want to do now is transform our data in a way that allows us to facet the data based on our measurement variables.</p>
-<p>Here we go:</p>
-<pre><code># We use the gather function
-# Option (1)
-aqd_long &lt;- aqd_mock %&gt;% gather(Parameter, value, TEMP_W_ES:Na)
-head(aqd_long)
-# Option (2)
-aqd_long &lt;- gather(aqd_mock, Parameter, value, TEMP_W_ES:Na)
-head(aqd_long)
+<p>Sometimes its useful to split the dataframes based on multiple values. Here we will generate summary statistics for each Well based on the sampling season.</p>
+<pre><code class="python">df %&gt;% group_by(Well, Season) %&gt;% summarize(n=n(), mean=mean(O2_perc))
+df %&gt;% group_by(Well, Season) %&gt;% summarize(n=n(), mean=mean(O2_perc)) %&gt;% arrange(mean, Well)
 </code></pre>
 
-<div class="admonition question">
-<p class="admonition-title">Question</p>
-<p>Take a moment and try to figure out how gather() works. What is the role of the %&gt;% operator?</p>
-</div>
-<pre><code>head(aqd_long)
-    Well Month Season Cluster Zone Aquifer Parameter    value
-1    H41   Mar Spring       2  HTL     HTL TEMP_W_ES   4.4000
-2    H41   Jun Summer       2  HTL     HTL TEMP_W_ES   4.5000
-3    H41   Aug Summer       2  HTL     HTL TEMP_W_ES   4.7000
-4    H41   Nov Autumn       2  HTL     HTL TEMP_W_ES   4.8000
-5    H41   Feb Winter       2  HTL     HTL TEMP_W_ES   3.9000
-6    H41   May Spring       2  HTL     HTL TEMP_W_ES   4.8000
-7    H41  July Summer       2  HTL     HTL TEMP_W_ES   5.1000
-8    H41   Oct Autumn       2  HTL     HTL TEMP_W_ES   4.8000
-9    H41   Jan Winter       2  HTL     HTL TEMP_W_ES   4.9000
-10   H41   Apr Spring       2  HTL     HTL TEMP_W_ES   4.8000
+<p>There are also some nice functions were we can generate summary statistics for all data columns at once, such as:</p>
+<pre><code class="python">df %&gt;% select(Well, Season, TEMP_W_ES:Na) %&gt;% group_by(Well, Season) %&gt;% summarize_all(funs(mean))
+
+df_sum &lt;- df %&gt;% group_by(Well, Season) %&gt;% summarize_at(.vars = vars(TEMP_W_ES:Na), .funs = c(n=&quot;length&quot;, mean=&quot;mean&quot;, sd=&quot;sd&quot;))
+
+#I haven't figured out the best way to order these columns yet, but this is a quick and dirty way.
+df_sum %&gt;% select(Well, Season, order(names(df_sum)))
 </code></pre>
 
-<p>Our data was partially transformed into what is commonly known as long format. We can now use the transformed dataframe for facetting as before:</p>
-<pre><code>ggplot(aqd_long, aes(x = Well, y = value), xlab=&quot;&quot;) +
-    geom_point() +
-    labs(title=&quot;Dataset parameters&quot;) + theme(axis.text.x = element_text(angle = 25, hjust = 1)) +
-    facet_wrap(~Parameter)
-</code></pre>
-
-<p>That kind of worked, success with the facetting, but this plot needs some serious tweaking in terms of visual appeal.</p>
-<div class="admonition exercise">
-<p class="admonition-title">Exercise</p>
-<ol>
-<li>Adjust the axis ranges by free scaling</li>
-<li>Add boxplots as you did before</li>
-<li>Use the black and white theme and get rid of the grid lines etc.</li>
-</ol>
-</div>
-<p>A potential solution could look as follows:</p>
-<pre><code>ggplot(aqd_long, aes(x=Well, y=value)) + geom_boxplot(aes(fill = Season)) +
-  geom_point(aes(fill = Season, alpha = 0.6, shape = factor(Aquifer)), colour = &quot;Black&quot;, position = position_jitterdodge()) +
-  labs(title=&quot;Dataset parameters&quot;) + theme(axis.text.x=element_text(angle = 25, hjust = 1)) +
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-  facet_wrap(~Parameter, scales = &quot;free&quot;) + ylab(label = &quot;mg/L&quot;) + 
-  guides(size = FALSE, alpha = FALSE, fill=guide_legend(title=&quot;Season&quot;), shape = guide_legend(title=&quot;Aquifer&quot;)) +
-  scale_shape_manual(values=c(21,22))
-</code></pre>
-
-<p>Although we look at quite a number of parameters the figure does not look terribly messy. Let's filter the dataset anyway a bit. Imagine we are only interested in the following parameters:</p>
-<ul>
-<li>Fe</li>
-<li>TEMP_W_ES</li>
-</ul>
-<div class="admonition exercise">
-<p class="admonition-title">Exercise</p>
-<ul>
-<li>Subset the data accordingly and re-do the plotting.</li>
-</ul>
-</div>
-<pre><code>aqd_long_subset &lt;- aqd_long[which(aqd_long$Parameter == c(&quot;Fe&quot;, &quot;TEMP_W_ES&quot;)),]
-</code></pre>
-
-<h1 id="steps-beyond">Steps beyond</h1>
-<h2 id="going-beyond-the-boxplot-correlation-plots">Going beyond the boxplot - correlation plots</h2>
-<p>One of the strong suits of <em>ggplot2</em> is that it comprises numerous vizualization options, with dot plots and box plots being only two of them. And beyond that there are meanwhile a lot of R packages that stick to the <em>ggplot2</em> syntax that expand R's plotting capabilities even more. </p>
-<p>Ok, what we will try now is to get in a very simple way an idea whether our parameters are correlated with each other.</p>
-<p>Quick reminder, part of our data is made up by descriptive variables. So first, we will extract only our measurement variables.</p>
-<pre><code># What are the dimensions of our dataframe
-dim(aqd_mock)
-# Quickly check again which columns are containing descriptive variables
-head(aqd_mock)
-# Subset the dataframe accordingly
-aqd_num &lt;- aqd_mock[7:24]
-</code></pre>
-
-<p>Done. Now we calculate correlations between all measurement variables.</p>
-<pre><code># Some more necessary R packages
-library(&quot;ellipses&quot;)
-library(&quot;RColorBrewer&quot;)
-
-# Calculate correlations
-aqd_cor = cor(aqd_num)
-
-# A sneek peek at our correlations
-aqd_cor
-
-# We want to colorize our planned correlation plot, so lets create a palette
-my_colors &lt;- brewer.pal(5, &quot;Spectral&quot;)
-my_colors=colorRampPalette(my_colors)(100)
-
-# Plot the plot ;-)
-ord &lt;- order(aqd_cor[1, ])
-aqd_ord = aqd_cor[ord, ord]
-plotcorr(aqd_ord , col=my_colors[data_ord*50+50] , mar=c(1,1,1,1)  )
-</code></pre>
-
-<p>Oh hallo, that's pretty, what does it mean? Let's break up these lines.</p>
-<pre><code># Calculate correlations
-aqd_cor = cor(aqd_num)
-</code></pre>
-
-<div class="admonition question">
-<p class="admonition-title">Question</p>
-<ul>
-<li>What does cor() do?</li>
-</ul>
-</div>
-<p>That was an easy one. What about:</p>
-<pre><code># We want to colorize our planned correlation plot, so lets create a palette
-my_colors &lt;- brewer.pal(5, &quot;Spectral&quot;)
-my_colors=colorRampPalette(my_colors)(100)
-</code></pre>
-
-<div class="admonition question">
-<p class="admonition-title">Question</p>
-<ul>
-<li>What is a palette? </li>
-<li>What do brewer.pal() and colorRampPalette() do?</li>
-</ul>
-</div>
-<pre><code># Plot the plot ;-)
-ord &lt;- order(aqd_cor[1, ])
-aqd_ord = aqd_cor[ord, ord]
-plotcorr(aqd_ord , col=my_colors[aqd_ord*50+50], type = &quot;lower&quot;, diag = FALSE, numbers = TRUE , mar=c(1,1,1,1))
-</code></pre>
-
-<div class="admonition exercise">
-<p class="admonition-title">Exercise</p>
-<ul>
-<li>Take a moment and try to figure out what the figure shows you</li>
-</ul>
-</div>
-<h2 id="going-beyond-the-boxplot-while-going-back">Going beyond the boxplot while going back</h2>
-<p>Last but not least we want to take a look at interactive plots. Plots do not have to static, interactive plots allow us to dive into data into a much more engaging way. </p>
-<p>Good, what we now try is to turn or facetted box plot into an interactive version.</p>
-<p>Luckily, this is extremly easy.</p>
-<pre><code>p &lt;- ggplot(aqd_long, aes(x=Well, y=value)) + geom_boxplot() +
-  geom_point(aes(fill = Season, alpha = 0.6, shape = factor(Aquifer)), colour = &quot;Black&quot;, position = position_jitterdodge()) +
-  labs(title=&quot;Dataset parameters&quot;) + theme(axis.text.x=element_text(angle = 25, hjust = 1)) +
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-  facet_wrap(~Parameter, scales = &quot;free&quot;) + ylab(label = &quot;mg/L&quot;) + 
-  guides(size = FALSE, alpha = FALSE, fill=guide_legend(title=&quot;Season&quot;), shape = guide_legend(title=&quot;Aquifer&quot;)) +
-  scale_shape_manual(values=c(21,22))
-
-p &lt;- ggplotly(p)
-p
-</code></pre>
-
-<p>You are now able to explore your data interactively in the viewer window of RStudio. For more ideas about interactive <em>ggplot2</em> plots check out this <a href="https://plot.ly/ggplot2/">link</a>.</p>
-<div class="admonition exercise">
-<p class="admonition-title">Exercise</p>
-<p>Create interactive boxplots:</p>
-<ul>
-<li>For a single variable boxplot (e.g. Fe)</li>
-<li>And a subset</li>
-</ul>
-</div>
-<p><sub>Written by Carl-Eric Wegner</sub>
+<h2 id="dplyr-summary-questions">dplyr Summary Questions</h2>
+<p>Questions 15-18:<br />
+re-do questions 4, 5, 8, and 10 using dplyr functions<br />
+&#49;&#57;. Find the mean SO4 levels for the two aquifers<br />
+&#50;&#48;. Find the mean SO4 levels for the two aquifers each season<br />
+&#50;&#49;. Add a new column with the Hydronium ion concentration for each sample (hint: H3O+ = 10^(-pH) )<br />
+&#50;&#50;. Add a new column with the pOH value for each sample (pH + pOH = 14)  </p>
+<p><sub>Written by Will A. Overholt</sub>
 <sub>Oct 2018</sub></p>
               
             </div>
@@ -716,10 +548,10 @@ p
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../part3/" class="btn btn-neutral float-right" title="Basic statistics">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../part3/" class="btn btn-neutral float-right" title="Data visualization and exploration">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href=".." class="btn btn-neutral" title="Data manipulation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href=".." class="btn btn-neutral" title="From Excel to R"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   

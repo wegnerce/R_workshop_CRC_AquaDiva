@@ -1,8 +1,10 @@
-site_name: "R from a learners perspective - Data visualization"
+site_name: "R from a learners perspective - The Küsel Lab (c) 2018"
 nav:
-- Data manipulation: index.md
-- Data visualization and exploration : part2.md
-- Basic statistics: part3.md
+- From Excel to R: index.md
+- Data manipulation: part2.md
+- Data visualization and exploration : part3.md
+- Basic statistics: part4.md
+- Multivariate analysis: part5.md
 markdown_extensions:
 - admonition
 theme: readthedocs

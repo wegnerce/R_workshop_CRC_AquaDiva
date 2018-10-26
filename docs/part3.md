@@ -1,439 +1,605 @@
-# Basic Statistical Tests with R
-This is going to be fairly fast paced and brief discussion of many commonly used statistical tests and how to run them in R. I barely scratch the surface in terms of the kinds of tests available and which should be used. I **HIGHLY HIGHLY** recommend you check out the Handbook of Biological Statistics and the R companion book (both free online) when you are analyzing your own data!!
+# Data visualization and exploration
 
-## Some extremely excellent statistic references
-Handbook of Biological Statistics
-<http://www.biostathandbook.com/>
+## Synopsis
 
-R Companion for Biological Statistics
-<https://rcompanion.org/rcompanion/a_02.html>
+In this part of the workshop you will familiarize yourself with:
 
-Intro R Statistics
-<https://www.bioinformatics.babraham.ac.uk/training/R_Statistics/Introduction%20to%20Statistics%20with%20R%20manual.pdf>
+* R's basic plotting capabilities
+* _ggplot2_, its syntax and fundamentals
+* as well as some advanced data visualization
 
-Probability & Statistics
-<https://cran.r-project.org/web/packages/IPSUR/vignettes/IPSUR.pdf>
+If you have questions ASK, feel free to drop me an [e-mail](mailto:carl-eric.wegner@uni-jena.de) also after the workshop.
 
-Handbook of Statistical Analyses
-<https://cran.r-project.org/web/packages/HSAUR/vignettes/Ch_introduction_to_R.pdf>
+## Setting the stage
 
-## Our plan today
-Today we will discuss and then explore the following ideas:  
-    - Common assumptions & what these look like.  
-    - Students T tests and derivations  
-    - ANOVA and derivations  
-    - Linear Regression / Correlation  
+Plotting is a very personal thing (btw color schemes as well), ask three different people and you will get a variety of feedback with respect to plotting and data visualization in general. A lot of people get away with _Excel_, _SigmaPlot_, _GraphPad_, _Matplotlib_ (if you are a Pythonista, which makes you a good person by default) or something else. 
 
-## Assumptions of common parametric tests:
-1. Independence  
-The measurements collected are independent from each other.  
-Common voiolations include:
-    - timeseries data
-    - repeated measurements from the same sample
-    - measurements from small spatial region
-    - Other?
-  
-2. Normality  
-Do the measurements come from a normal or gaussian distribution?  
-    - Surprisingly, this is actually not that important since most of the common parametric tests are fairly robust to deviations from normality
-    - You can try to transform data to meet assumptions of normality
-    - A great idea is to plot the data and see what you are getting yourself into
+R as its parent S is a programming language primarily dedicated to data manipulation (in a good sense) and statistical analysis. Due to its modular architecture and the availabilitry of sophisticated libraries for data processing and plotting it is an excellent choice for any kind of data visualization.
 
-3. Homoscedasticity  
-Or the assumption that different groups have the same standard deviation
-    - more of a problem if you have an unbalanced dataset 
-    - again best to plot you data and get a feel for what it looks likes
+When I got in touch with R the first time, I was googling options how to do a complex multi-panel figure. The original query was "plot facets vector graphics". If you do the exact same query now, you will end up with _ggplot2_ being the second hit. Yep, this is how I "met" R and years later I would still lie if I would say that I'm any sort of R expert. Most of me using R is still centered around the following dogma:
 
-An example:
-```python
-#Loading the libraries we will be using today
-library(ggplot2)
-library(dplyr)
+1. Define the problem
+2. Look up necessary R resources
+3. Apply available examples to own data
+4. Be happy after A LOT of try and error.
 
-#An example dataset
-ex_norm <- data.frame(sampleid = seq(1,100), 
-                      y = rnorm(n=100, mean=10, sd=2), 
-                      treatment=rep(c("A","B"), each=50))
-
-#Our class dataset from yesterday
-df <- df <- read.delim("simulated_dataset.txt", header=T)
-```
-
-Lets start exploring these data!
-
-```python
-#Plotting a histogram to see how your univariate data are arranged
-ggplot(ex_norm, aes(y))+
-  geom_histogram(binwidth = 0.5)
-
-#Using a scatter plot to look at your data
-    ggplot(ex_norm, aes(y))+
-      geom_point(aes(x = treatment, y = y))
-
-#Using a box plot
-ggplot(ex_norm, aes(x=treatment, y=y))+
-  geom_boxplot(aes(y=y))
-
-#Fancier box plot (violin plot)
-ggplot(ex_norm, aes(x=treatment, y=y))+
-  geom_violin(aes(y=y))
-```
-
-Working with some of our data: The joys of real life
-```python
-ggplot(df, aes(NO3))+
-  geom_histogram()
-
-ggplot(df, aes(NO3))+
-  geom_histogram(binwidth = 5)
-
-ggplot(df, aes(NO3))+
-  geom_histogram(aes(fill = Well))
-
-ggplot(df, aes(x=Well, y = NO3))+
-  geom_point()
-
-ggplot(df, aes(x=Well, y = NO3))+
-  geom_boxplot()
-```
-So what do you think?  
-Are these groups normally distributed?  
-We can use the Shapiro Wilk normality test to see. Just FYI, this test is quite sensitive to non-normal data. If it fails, you don't have to immediately panic since the following tests we'll talk about are much more robust to non-normal data.
-
-```python  
-df %>% select(Well,NO3) 
-   %>% group_by(Well) 
-   %>% summarise(statistic = shapiro.test(NO3)$statistic, 
-                 p.value = shapiro.test(NO3)$p.value)
-
-df %>% select(Well,NO3) 
-   %>% group_by(Well) 
-   %>% summarise(statistic = shapiro.test(sqrt(NO3))$statistic, 
-                 p.value = shapiro.test(sqrt(NO3))$p.value)
-
-#This test is running the following command on each of the Wells
-shapiro.res <- shapiro.test(df[df$Well == "H43",]$NO3)
-shapiro.res$statistic
-shapiro.res$p.value
+Ok, first things first, fire up RStudio and check whether you have the following packages installed and load them. Throughout the course you can either execute commands from within a script (mark the respective lines of code and hit CTRL+ENTER) or directly in the console.
 
 ```
-Is the sampling scheme balanced?
-```python
-df %>% select(Well,NO3) 
-   %>%group_by(Well) 
-   %>% summarise(n=n())
+library("ggplot2")
+library("dplyer")
+library("tidyr")
+library("ellipse")
+library("RColorBrewer")
 ```
 
-What can we do?
-```python
-#squareroot transform
-ggplot(df, aes(x = Well, y = sqrt(NO3)))+
-  geom_point()+
-  stat_summary(fun.y = "mean", geom = "point", color="blue")
+Ideally you should see no error message popping up, if you see any then you did not prepare properly for the workshop - shame on you, or rather me, because I did not tell you in time.
 
-#log10 transform
-ggplot(df, aes(x = Well, y = log10(NO3+0.5)))+
-  geom_point()+
-  stat_summary(fun.y = "mean", geom = "point", color="blue")
+![alt text](fail.jpg)
+
+## Basic plotting
+
+Enough blabla, this session is about data visualization, where are the plots? Here they come. Create a new R script, type the following two lines and execute them:
+
+```
+dotchart(rnorm(250), col = "blue", main = "Quick ugly example")
+hist(rnorm(250), col = "blue", main = "Quick ugly example II")
+```
+Alternatively type them one after another in the console.
+
+Keep an eye on the plot window, what did just happen?
+
+!!! QUESTION
+
+     * Try to figure out what the individual functions and parameters do.
+
+First take home message of the day - the R help is your friend (a good one).
+The general syntax for calling R's help is:
+
+`?functionXYZ()`
+
+Let's start exploring R's basic plotting capabilities in a bit more detail, this is a bit of a recap of what you did yesterday. 
+``` 
+# Let's define two arbitrary vectors
+bacteria <- c(10, 30, 60, 5, 90)
+archaea <- c(25, 27, 22, 37, 10)
+
+# Plot them both
+plot(bacteria, type="o", col = "orange")
+lines(archaea, type="o", pch=22, lty=2, col = "blue")
+
+axis(1, at=1:5, lab=(c("March","April","May","June","July")))
+``` 
+Let's say what we just plotted are relative abundances for archaea and bacteria across different months. But the output looks like garbage, apparently we had at first default x-axis labels, which were overwritten. The result is this "beauty" of a plot.
+
+How to fix that, take a look at the following code:
+``` 
+plot(bacteria, type="o", col = "orange", axes=FALSE, ann = FALSE)
+lines(archaea, type="o", pch=22, lty=2, col = "blue")
+
+axis(1, at=1:5, lab=(c("March","April","May","June","July")))
+``` 
+Does that make it any better? What is now missing?
+
+!!! EXERCISE
+
+     * Call the help for axis(), box(), title(), and legend. 
+     * Add a y-axis, a box around the plot, titles for the plot as well as the two axes, and a legend. 
+
+One possible solution:
+
+```
+plot(bacteria, type="o", col = "orange", axes=FALSE, xlab = "Month", ylab = "Rel. abundance [%]", main = "Bac and Arc")
+lines(archaea, type="o", pch=22, lty=3, col = "blue")
+axis(1, at=1:5, lab=(c("March","April","May","June","July")))
+box()
+axis(2, las = 2)
+legend(1, max(bacteria), c("Bacteria", "Archaea"), cex=0.8, col=c("orange", "blue"), 
+       pch=c(21,22), lty=c(1,3))
 ```
 
-Which looks better? 
-```python
-#Note, this test is sensitive to non-normal data as well as heteroscedastic data.
-#It is nice for picking the best transform though.
-#raw data
-bartlett.test(data=df, NO3 ~ Well)
+Alright, so far we played with a dataset that we quickly created, as you already learned before you can easily import datasets like this from any delimited file. Imagine a file like this (e.g. table.tsv):
 
-#squareroot transform
-bartlett.test(data=df, sqrt(NO3) ~ Well)
+| bacteria | archaea |
+|----------|---------|
+| 10       | 25      |
+| 30       | 27      |
+| 60       | 22      |
+| 5        | 37      |
+| 90       | 10      |
 
-#log10 transform
-bartlett.test(data=df, log10(NO3+1) ~ Well)
+Two columns, tab-delimited, and the columns have names ("bacteria2, "archaea").
+
+We could read this file as outlined below. 
+
+``` 
+# Read the table, pay attention to the header and sep arguments
+rel_prok <- read.table("table.tsv", header=T, sep="\t")
+
+# Instead we merge our two vectors because you did a lot of importing yesterday...
+rel_prok <- data.frame(bacteria, archaea)
+colnames(rel_prok) <- c(bacteria, archaea)
+
+# We define colors to be used with our data series, because why not
+plot_colors <- c("blue", "orange")
+
+# We initiate a PNG devide to save the output
+png(filename="output.png", height=250, width=300, bg="white")
+
+# AND NOW?!
+# Adapt your code
+# and end it with
+dev.off()
+# to turn off the PNG device
+``` 
+
+!!! EXERCISE
+
+     * Plot the data as before, and save the output as a .png.
+     * Do you have to adjust the dimensions?
+     * What is the dev.off() function doing?
+     
+## Base R data visualization options
+
+So far we basically only did line charts, base R provides us however with a whole range of different visualization options. 
+
+Let's take one of our vectors and see how we can create bar charts and how we can visualize both data series by dot charts.
+
+Bar charts:
+
 ```
-OK, it is your turn. Individually or in small groups, check other variables in the data frame
-Ask yourself if:
-    - normal
-    - homoscedastic
-    - independent
-    - transform
-Make sure you look at some of the variables associated with the aquifer.
+bacteria <- c(10, 30, 60, 5, 90)
 
-## Student's t tests
-### One-sample t tests
-These are used to compare the mean of your population to a theoretical mean
+# A simple bar plot
+barplot(bacteria, main="Bacteria relative abundance", xlab="Month",
+   ylab="Rel. abundance [%]", names.arg=c("March","April","May","June","July"))
 
-```python
-#Lets see if the Nitrate from well H43 has a mean of 0.
-t.test(df[df$Well == "H43",]$NO3, mu = 0, conf.level = 0.95)
+# Simple, and slightly pimped, pattern fill
+barplot(bacteria, main="Bacteria relative abundance", xlab="Month",  
+   ylab="Rel. abundance [%]", names.arg=c("March","April","May","June","July"), 
+   border="gray", density=c(10,20,30,40,50))
 
-#We know that nitrate violates some assumptions of normality. 
-#How does the more normal square root transformed data appear?
-t.test(sqrt(df[df$Well == "H43",]$NO3), mu = 0, conf.level = 0.95)
+# Add a box around the plot because we like boxes
+box()
 
-#Always a good idea to see if you stats agree with your intuition of the data
-ggplot(df[df$Well == "H43",], aes(x=Well, y=NO3))+
-  geom_point(position = position_jitter())
-
-#What happens with our example dataset?
-t.test(ex_norm$y, mu = 10, conf.level = 0.95)
-```
-OK, now it is your turn, test to see if the lower aquifer (HTL) is anaerobic.
-
-
-###Two-sample t tests
-These are much more common (in my opinion). Here we are comparing the means between 2 groups.  
-Lets see if the 1st half of our simulated normal data is significantly different from the last half.
-```python
-t.test(ex_norm[seq(1,50),]$y, ex_norm[seq(51,100),]$y)
-#What is this actually doing?
-
-#Lets plot our data again
-ggplot(df, aes(x = Aquifer, y = NO3))+
-  geom_boxplot()
-#Check for equal variances
-bartlett.test(data=df, NO3 ~ Aquifer)
-
-#Run the two-sample t.test based on the aquifer
-t.test(df[df$Aquifer == "HTL",]$NO3, df[df$Aquifer == "HTU",]$NO3)
-```
-
-In general though, if you have a large enough sample size (approximately > 5) you want to use a Welchs t test (default in R and what we've been using). This variation does not assume equal variance. In fact, many places recommend to always use this test over a students t test. If the samples have the same variance you can turn that on in this way
-```python
-t.test(df[df$Aquifer == "HTL",]$NO3, df[df$Aquifer == "HTU",]$NO3, var.equal = TRUE)
-```
-
-If you do not think you samples are normally distributed you can use a Mann Whitney U test. 
-```python
-wilcox.test(df[df$Aquifer == "HTL",]$NO3, df[df$Aquifer == "HTU",]$NO3)
-#Note: We get the "cannot compute exact p-values since we have multiple measurements 
-#of the same value (0) in the HTU dataset.
-```
-In practice, I almost always use the default Welch's t.test for un-equal variance.
-
-
-## ANOVA
-### One-way ANOVA
-We can use an analysis of variance (ANOVA) test to compare the means of 2 or more groups. If it is only 2 groups, then a one-way anova and a two-sample t test are identical.
-
-There are A LOT of different ways to do ANOVA tests and we will quickly cover a few. As with everything in this section, I highly recommend you double check references before you get started.
-
-```python
-no3_aov <- aov(data=df, sqrt(NO3) ~ Well)
-summary(no3_aov)
-```
-Understanding the output:  
-ANOVA essentially tests if the variance between your group means is different from the variance within the groups. Under the null hypothesis, all the groups have a same mean, so the variance between those group means will be the same as the average within group variation. There are 100s of books written on ANOVA and I recommend checking some of them out. Might also be good to manually calculate the values yourself once if you are interested.  
-The ratio of these variances under the null fits an F-distribution (hence the F value). The p.value can then be determined from how different our tests F value is from the expected F value under the null hypothesis.  
-
-The residuals in an R anova table refer to the within group statistics. The degrees of freedom are "number observations" - "number of groups". The group variable is specified (between-group means) and the degrees of freedom here are calculated as the "number of groups" - 1. 
-
-Ideally you report the results as Nitrate concentrations in the wells were significantly different (one-way ANOVA, F<sub>2,27</sub> = 29, p < 1e-7).  
-
-Note, ANOVA assumes your group data are normally distributed, with equal standard deviations in the groups, and are the measurements are independent. However ANOVA is fairly robust to non-normal data and if your sampling scheme is balanced it is robust to differences in standard deviations between the groups as well. If your experimental plan is not balanced, you need to be more careful as you can get a lot more false positives (p values < 0.05, but no actual differences between the means). That said, if you have a very significant p value (ours is 1.71e-7) your means are probably different.  
-A non-parametric version of ANOVA can also be used if your data are not normal.
-This would be the Kruskal Wallis test. It will have a lot less power and should be picked if your data are not normal AND you dont expect them to be normal. Interestingly, some people (John McDonald of the Handbook for Biological Statistics) recommend never using this test.
-```python
-kruskal.test(data=df, sqrt(NO3) ~ Well)
-```
-There is also a version of ANOVA if you think your data are normal, but you do not expect equal variances.
-```python
-oneway.test(data=df, sqrt(NO3) ~ Well)
-```
-There are a couple of built in ways to check your assumptions after running the ANOVA test.
-```python
-#Check afterward your ANOVA for whether the groups have similar variances
-#Here we are plotting the residuals vs the group means. 
-#Remember that the residuals are the "data values" - "group mean". 
-#There should be no relationship between the residuals and the means (flat line). 
-#The spread should be approximately equal as well.
-plot(no3_aov,1)
-
-#We can also check to see if the group data are normal.
-plot(no3_aov, 2)
-#Here we are plotting quantiles of the residuals against the quantiles of a normal distribution.
-#Normal data will match the theoretical normal distribution giving a straight 1:1 line.
+# This time with colors
+barplot(bacteria, main="Bacteria relative abundance", xlab="Month",  
+        ylab="Rel. abundance [%]", names.arg=c("March","April","May","June","July"),
+        col=rainbow(5))
 ```
 
-OK great, now we are pretty sure that NO3 values are different between our wells. However, we want to know **WHICH** wells are different from each other.  
-Remember, ANOVA only tells you if there is a diffence in your groups means and NOT which groups are different.  
+And a dot chart:
 
-We can do post-hoc tests to see which groups are significantly different. The most common option that I've seen is to use Tukeys HSD (honest significant differences) test. This assumes equal variances between the groups, and corrects for multiple tests.
-```python
-TukeyHSD(no3_aov)
 ```
-There are no base R functions for unbalanced / unequal variances for post-hoc testing. There are other packages you can try though (multcomp, lsmeans, DescTools, agricolae).
-
-```python
-#You can also do two-way t tests and correct the p.values for multiple tests.
-t.test(sqrt(df[df$Well == "H52",]$NO3), sqrt(df[df$Well == "H41",]$NO3))$p.value
-t.test(sqrt(df[df$Well == "H52",]$NO3), sqrt(df[df$Well == "H43",]$NO3))$p.value
-t.test(sqrt(df[df$Well == "H43",]$NO3), sqrt(df[df$Well == "H41",]$NO3))$p.value
-p.adjust(c(0.008654862, 0.00662454, 1.876758e-10), method="bonferroni")
+# Plot the dotchart
+dotchart(t(rel_prok), color=c("blue", "red"), main="Dotchart Bacteria and Archaea")
 ```
 
-Pick a different variable, and test the means. Make sure to check how badly it violates the assumptions.
+We finish this first session with a little exercise.
 
-### Two-way ANOVA
-You can use a two-way ANOVA when there are two parameters (factors) associated with your data. In our case, an example would be "Well" and "Season". We have sampled our 3 wells multiple times throughout the year and over multiple years. We can use a two-way ANOVA to test whether our measured data is significantly different between well, between season, and if there is a well specific seasonal effect (intereaction between our factors).  
+!!! EXERCISE
 
-Two-way ANOVA is often used for repeated measurements from the same individuals and you want to control for differences between those individuals.  
+     Use the simple dataset to plot a grouped bar chart incl. a legend and a dot chart with months as row names. Export both as .png files. _NOT_ using RStudio's export function.
 
-Two-ANOVA with replication tests 3 NULL hypotheses. 1. The means within one of our factors are the same, 2. The means within the other factor are the same. 3. There is no interaction between the factors. You can also do a two-way ANOVA test without replication (one data point per group), but you need to assume that there is no interaction term and the test is much weaker.
+For more examples of using the plotting capabilities of base R have a look for instance [here](https://www.harding.edu/fmccown/r/).
 
-Generally, if the interaction between your variables is significant then you need to change your analysis plan since it is not fair to test for significance in only one of the variables. Instead, you can split your data up and do 2 one-way ANOVA tests. 
+Solutions:
 
-Lets take a look for what we are testing:
-```python
-ggplot(df)+
-  geom_boxplot(aes(x = Well, y = sqrt(NO3), color = Season))
-ggplot(df)+
-  geom_boxplot(aes(x = Season, y = sqrt(NO3), color = Well))
 ```
-Thoughts?
+# Grouped bar chart
+barplot(as.matrix(rel_prok), main="Bac vs Arc", ylab= "Rel. abundance",
+        beside=TRUE, col=rainbow(5))
+box()
 
-```python
-#Run the anova in R and save the result
-no3_2fac_aov <- aov(data=df, sqrt(NO3) ~ Season + Well + Season:Well)
-
-#view information about the ANOVA
-summary(no3_2fac_aov)
-
-#Example of how R specifies ANOVA formulas
-summary(aov(data=df, sqrt(NO3) ~ Season + Well))
-summary(aov(data=df, sqrt(NO3) ~ Season*Well))
+# Place the legend at the top-left corner with no frame  
+# using rainbow colors
+legend("topleft", c("March","April","May","June","July"), cex=1, 
+       bty="n", fill=rainbow(5))
+```
+```
+# Dot chart with months as labels
+row.names(rel_prok) <- c("March","April","May","June","July")
+rel_prok
+dotchart(t(rel_prok), color=c("blue", "red"), main="Dotchart Bacteria and Archaea", cex = 1)
 ```
 
-Lets look at the assumptions:
-```python
-plot(no3_2fac_aov, 1)
-plot(no3_2fac_aov, 2)
-#Actually looks quite a bit better than I expected...
-#Might be a good idea to remove the outliers and re-test though.
+
+# Basic usage of ggplot2
+
+## ggplot2
+
+Base R's plotting capabilities are not bad, but the bottom line is, even with a lot of tweaking the resulting plots are visually rather less appealing. When you are dealing with your data, you want to present it in the best possible/convincing way. Often when I read papers and I see mediocre figures I think one thing, namely: "RESPECT YOUR DATA!". Investing time in in proper plotting/visualization/beautifying is usually more than worth it as it pays off in multiple regards.
+
+Luckily, there are a multitude of R packages that provide us with almost unlimited options of data visualization. The most common one is _ggplot2_, which was created and is maintained by [Hadley Wickham](https://hadley.nz/). Hadley is incredibly active in the R scene and maintains a lot of popular R packages/tools including:
+
+* dplyr
+* tidyr
+* stringr
+* _ggplot2_
+
+to name a few. He is also one of the main persons behind [RStudio](https://www.rstudio.com/).
+
+## ggplot2 versus base R
+
+Plotting in base R can be mostly done using data stored in vectors. In comparison, _ggplot2_ relies on dataframes. Let's have a look at one of these as a quick reminder:
+
+```R
+data(mtcars)
+head(mtcars)
+      mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
 ```
 
-OK, so this is not really fair. But as an example (assuming no interaction was found) we can still do follow up testing between groups.
-```python
-TukeyHSD(no3_2fac_aov, which = "Well")
+Dataframes are nothing else but lists of vectors of equal lengths. It we take a qick look at our workshop mock data, are we dealing with a dataframe as well?
+
+```R
+aqd_mock <- read.table("simulated_dataset.txt", header=T, sep="\t", row.names = "SampleID")
+head(aqd_mock)
+ Well Month Season Cluster Zone Aquifer TEMP_W_ES  EC     EC25   PH   DO NH4 PO4 DOC TOC   TIC   NO3   SO4  Cl   Ca
+Sample1  H41   Mar Spring       2  HTL     HTL       4.4 455 113.7800 7.41 6.41 0.0 0.4 1.3 1.3 36.81 24.34 21.86 5.6 34.7
+Sample2  H41   Jun Summer       2  HTL     HTL       4.5 465 113.2046 8.21 5.50 0.1 0.1 1.1 1.2 37.45 19.29 15.33 5.8 33.7
+Sample3  H41   Aug Summer       2  HTL     HTL       4.7 444 108.1701 7.31 3.71 0.2 0.9 1.7 1.8 32.23 12.98 19.24 5.6 30.9
+Sample4  H41   Nov Autumn       2  HTL     HTL       4.8 449 110.1839 7.31 3.20 0.2 0.1 1.5 1.7 35.84 12.04 16.49 5.7 30.3
+Sample5  H41   Feb Winter       2  HTL     HTL       3.9 457 115.9376 7.21 6.99 0.0 1.1 0.7 0.8 34.27 23.79 26.22 5.9 35.4
+Sample6  H41   May Spring       2  HTL     HTL       4.8 477 116.3691 7.31 7.83 0.0 2.4 0.7 0.7 35.37 26.71 23.91 5.6 36.0
+         Fe    Mg   Mn  Na
+Sample1 0.0 23.17 0.00 3.0
+Sample2 0.0 24.51 0.00 2.0
+Sample3 5.2 29.54 0.35 3.5
+Sample4 1.4 29.00 0.34 3.3
+Sample5 6.0 23.90 0.09 3.5
+Sample6 2.7 21.95 0.09 1.6
+```
+Apparently we do. BTW:
+
+!!! QUESTION
+
+     * Why do we add the "header" and "row.names" parameters?
+
+Besides from the usage of dataframes, the second key characteristics of _ggplot2_ is that you work with layers. Basically, every _ggplot2_ object is like a canvas and we keep painting on it by adding layers, aka geoms.
+
+```R
+library("ggplot2")
+# Initialize a ggplot object
+ggplot(aqd_mock, aes(x=Zone, y=Fe))
 ```
 
-Take some time and run a two-way ANOVA test with a different dependent variable.
+Thats our canvas, and yes so far it is fairly empty. We have to fill it by adding the aforementioned _geom_ objects, before we take a look at the overall _ggplot2_ syntax.
+```
+ggplot(
+  data = <some_data_frame>,
+  mapping = aes(
+    x = <some_column>,
+    y = <some_other_column>,
+    random aesthetics = <based_on_a_random_parameter>
+    )
+  ) +
+  geom_<some_plot_type>()
+```
+Now we add some content.
 
-## Linear Regression and Correlation
-Linear regression and correlation are used to investigate the relationship between two continuous variables. In general you want to know if two variables are related, how closely they are related, and mathematically describe this relationship.
-
-I am not going into details into the differences between linear regression and correlation. Check out this page for more info http://www.biostathandbook.com/linearregression.html
-
-Also, R is perfectly happy to let you run linear regression with 1 measurement variable and factors (discrete / categorical variables). In this case, it actually runs ANOVA/MANOVA in the background. I find this both convenient (you can use the same syntax and still be correct) and confusing (you may be running a different test than you expect).
-
-This is also why you see a lot of examples where people set up their ANOVA test with a linear regression model.
-For example:
-```python
-linear_model <- lm(data=df, sqrt(NO3) ~ Well)
-summary(aov(linear_model))
+```R
+ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point()
 ```
 
-Anways, lets see if Calcium and Sodium concentrations are related.
+We just created our first _ggplot2_ plot. Whoa.
+
+![alt text](it_works.jpeg)
+
+## Basic customizations / a bit about aesthetics
+
+Lets be more serios, our dataset spans data from different seasons. One obvious question is whether we can identify differences over the year? Let's find out and color our dots according to season.
+
+```R
+# A touch of color
+ggplot(aqd_mock, aes(x=Well, y=Fe, col = Season)) + geom_point()
 ```
-ggplot(df, aes(x = Ca, y = Na))+
-  geom_point()
+We can use this simple example to learn more about how _ggplot2_ aesthetics work.
+
 ```
-This looks pretty clear, but lets test it.
-By default, R uses a pearson correlation test which assumes that the data are linearly related and that the residuals are normally distributed. The null hypothesis is that the variables are not related (slope = 0). 
-```python
-cor.test(~ Ca + Na, data=df)
-```
-A nonparametric correlation test commonly used is the Spearman rank correlation test. It does not assume a distribution for the variables of if they are related. 
-```python
-cor.test(~ Ca + Na, data=df, method="spearman")
-```
-The correlation coefficient and the p value tend to be reported. The correlation coefficient (rho) goes from -1 to 1, where -1 indicates the variables are perfectly negatively correlated, and 1 indicates they are perfectly positively correlated. The p value is calculated using a t distribution with n-2 degrees of freedom.
+ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(col = Season))
+ggplot(aqd_mock, aes(x=Zone, y=Fe, col = Season)) + geom_point(colour = "Black")
 
+# Why does the following not work?
+ggplot(aqd_mock, aes(x=Zone, y=Fe, col = Season)) + geom_point(aes(col = "Black"))
 
-If we want to generate a linear regression model for these measurements, we can use the built in function lm().
-```python
-lm(Ca ~ Na, data = df)
-```
-The formula format R uses is Y ~ X1  
+# A second variable to modify aesthetics
+ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(col = Season, shape = Well))
 
-The "Y" variable is traditionally assigned as the dependent variable while the "X" variable(s) are the independent ones.
-Our example is not great since we are looking at two dependent variables that are probably not independent. In R the lm() function fits the ordinary-least-squares regression line, or the line that minimizes the distance between your observations and the line itself. This works best for analysing two continuous variables with both independent and dependent variables. It is not valid for 2 dependent variables (assuming there is no cause and effect relationship). There are other techniques in this instance, however, they are not valid if you want to predict unmeasured values.
+# That does not make so much sense hm?
+ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(col = Season, shape = Aquifer))
+ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(fill = Season, shape = factor(Aquifer), alpha = .6, size = 5), colour = "Black") + scale_shape_manual(values=c(21,22))
 
-Anyways, I strongly recommend you read the literature or use methods typically employed in your field before running these analyses on your own data.
-
-But for us, lets assume everything is fine and explore our linear regression results.
-
-```python
-linear_model1 <- lm(Ca ~ Na, data = df)
-summary(linear_model1)
-#Note that the pvalue & the t.value for the slope are the same as we got from the Pearson correlation analysis.
-cor.test(~ Ca + Na, data=df)
+# Getting rid of some legends
+ggplot(aqd_mock, aes(x=Zone, y=Fe)) + geom_point(aes(fill = Season, shape = factor(Aquifer), alpha = .6, size = 5), colour = "Black") + scale_shape_manual(values=c(21,22)) + guides(size = FALSE, alpha = FALSE)
+# Success
 ```
 
-The r^2 value (coefficient of determination) is a measure of how well your regression line fits the data, or how much of the variance of your Y variable (dependent) is explained by the X variable. Values close to 1 indicate your observed Y values fall on your regression line while values close to 0 indicate there is no relationship between your variables.
+Ah well, so far nothing really obvious, however right now it is really hard to tell. Let's try to 
+visualize this better.
 
-Like with ANOVA, we can explore data characteristics from the linear regression results.
-```python
-#Check for homoscedascity & bias (line should be flat around 0)   
-plot(linear_model1,1)
+!!! EXERCISE
 
-#Check for normality
-plot(linear_model1,2)
+     1. Check out geom_boxplot() via ?geom_boxplot()
+     2. Plot box plots combined with dot plots for the Fe content at the different wells, using the season as grouping. 
+     3. Try out geom_violin() as well.
+
+Does that that help, do we see differences across season now?
+
 ```
-OK, lets try another example.
-We know that oxygen concentrations are physically dependent on temperature. Lets see if there is a relationship between these values.
+# A first boxplot
+ggplot(aqd_mock, aes(x=Well, y=Fe)) + geom_boxplot(alpha = .6) +
+  geom_point(aes(fill=Season ,size = 5, shape = factor(Aquifer), alpha = .6), colour = "Black", position = position_jitterdodge()) + scale_shape_manual(values=c(21,22)) + guides(size = FALSE, alpha = FALSE)
 
-Which is the dependent and which is the independent variable?
-
-```python  
-ggplot(df, aes(x = TEMP_W_ES, y=DO))+
-  geom_point()
-cor.test(~ TEMP_W_ES + DO, data=df)
-summary(lm(DO ~ TEMP_W_ES, data=df))
-```
-But, wait. Lets think about this? Does a value of 0 depend on temperature in this case?
- 
-```python
-ggplot(df, aes(x = TEMP_W_ES, y=DO))+
-  geom_point(aes(color=Well))
-
-#Lets look at only wells with oxygen.
-cor.test(~ TEMP_W_ES + DO, data=df[df$Well == "H41",])
-lm_o2 <- lm(data=df[df$Well == "H41",], DO ~ TEMP_W_ES)
-summary(lm_o2)
-plot(lm_o2, 1)
-plot(lm_o2, 2)
+# And now grouped
+ggplot(aqd_mock, aes(x=Well, y=Fe)) + geom_boxplot(aes(fill = factor(Season), alpha = .6)) +
+  geom_point(aes(fill=Season ,size = 5, shape = factor(Aquifer), alpha = .6), colour = "Black", position = position_jitterdodge()) + scale_shape_manual(values=c(21,22)) + guides(size = FALSE, alpha = FALSE, fill=guide_legend(title="Season"), shape = guide_legend(title="Aquifer"))
 ```
 
-A very quick aside and primer on multiple linear regression (univariate).  
-Here we expect multiple continuous independent variables to effect our measured dependent variable. For example, maybe both temperature and PH affect DOC concentrations. If your goal is predictive and you have a bunch of independent variables that you would like to use to predict unmeasured dependent variables this can be a powerful method. If you are trying to explain cause & effect, you need to be very careful.  
-In general, your X variables should not be correlated. If they are, then it is difficult to parse out the effect (which one matters). If you just want to predict a value then it doenst matter, but adding highly correlated variables wont really improve your predictions.
-This is a huge and actively growing area of statistics (along with multivariate multiple regression) so I will just talk about how we could do simple multiple regression in R.
-Also, linear regression **does not** show causation. It might provide supportive evidence, but you need to be very careful with interpreting your data.
+!!! QUESTION
 
-```python
-#Lets check how our dependent variable is related to our independent variables
-ggplot(df, aes(x = TEMP_W_ES, y = DOC))+
-  geom_point()
-ggplot(df, aes(x = PH, y = DOC))+
-  geom_point()
-#Lets see if our independent variables are correlated
-cor.test(data=df, ~ PH + TEMP_W_ES)
+     * What is the parameter "position" good for?
 
-#Setting up the linear model:
-lm_DOC <- lm(data=df, DOC ~ TEMP_W_ES*PH)
-#What does the * mean here?
-  
-#Results from the model:
-summary(lm_DOC)
+In the beginning we talked about pretty figures, I do not know about you, but I strongly dislike the default _ggplot2_ theme (you should as well). How can we get rid of this grey background and white gridlines?
+
+```
+last_plot() + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ```
 
-## Parting Words
-To wrap this up. I hope you're now convinced of how useful this free programing language is. We did not touch upon many of the incredible pacakges that have been developed. Suffice to say, I have never found a problem that I had in R that someone else hadn't already solved and posted aobut (although sometimes it takes awhile to figure out how to ask Google the right question).  
-I know I'm sounding like a broken record, but it is always a good idea to familarize yourself with the fundamentals when you are performing some data analysis and I've founded the references at the top to be extremely useful.  
+That is better, at least a bit. Now we want to add/modify in additon the title and the axis labels of the plot.
 
-Also, I have had extremely good luck with stackedoverflow posts when I'm stuck or trying to figure out new methods. I encourage you to search the internet for examples of problems that you have. Start simple and refine your analysis as you go.  
-But remember, it is best to consider how you will answer your research question **before** you design the experiment. It's impossible to retroactively fix a poorly designed experimental plan and from personal experience spending more time at the beginning stages will make all your future analysis much easier.
+```
+last_plot() + labs(title="AquaDiva mock data", subtitle="Iron content", y="Fe [mg/L]", x="Well", caption="(c) CEW")
+```
+Not bad, really not bad.
 
-<sub>Written by Will A. Overholt</sub>
+The last_plot() function is incredibly useful when you are continuously working on a figure. BUT, what do we see our seasons are not properly ordered. Even in a world of climate change, autumn is not before spring and summer. We covered that yesterday.
+
+!!! EXERCISE
+	* Fix the order of the seasons.
+
+Here we go.
+
+```
+seasons <- ("Spring", "Summer", "Autumn", "Winter")
+aqd_mock$Season = factor(aqd_mock$Season, levels = seasons)
+```
+
+Given that we have the package RColorBrewer loaded, we can also fairly easy manipulate the colors of our boxplot.
+
+```
+# Playing around with colors thanks to RColorBrewer
+last_plot() + scale_fill_brewer(palette="Set1")
+last_plot() + scale_fill_brewer(palette="Set2")
+last_plot() + scale_fill_brewer(palette="Blues")
+```
+
+
+## Facetting and wrapping
+
+You have probably noticed that we are obviously dealing with a dataset that comprises a bunch of different variables. 
+
+Lets shortly talk about types of variables, what types come to your mind?
+
+Some examples:
+
+| Type        | Description							                |
+|-------------|---------------------------------------------------------------------------------|
+| categorical | variables that can be put in categories, e.g. male and female                   |
+| discrete    | variables that are limited to a certain number of values, e.g. grades in school |
+| measurement | variables that can be measured and given a number, e.g. ...                     |
+| ordinal     | categorical variables that can be ordered, e.g. low, medium, high diversity     |
+| ranked      | ordinal variables where every point can be ordered, e.g. OTU ranks              |
+
+Imagine the following scenario, we now know that there are differences across season for the Fe-content in the different wells. Now we want to do the same plot for all our measurement variables. 
+
+![alt text](darkside_II.jpeg)
+
+How do we do that?!
+
+What we have to do is known as facetting. For that we can make use of two different _ggplot2_ functions, facet_wrap() and facet_grid(), with the differencing being the number of facetting dimensions. A quick example for facet_wrap():
+
+```
+# We load the ggplot2 dataset mtcars
+data(mtcars)
+# And do some wrapping
+ggplot(data = mtcars, mapping = aes(x = hp, y = mpg)) + geom_point() + facet_wrap(~ cyl, scales = 'free_x')
+```
+
+And for facet_grip():
+
+```
+ggplot(data = mtcars, mapping = aes(x = hp, y = mpg)) + geom_point() + facet_grid(am ~ cyl, scales = 'free_x')
+```
+
+For detailed examples about facetting I recommend these links [click me](https://stcorp.nl/R_course/tutorial_ggplot2.html) and [me too](https://plot.ly/ggplot2/facet/).
+
+All nice and well, but how do we apply that to our mock data?
+
+```
+head(aqd_mock)
+```
+
+We have a couple of rather descriptive variables (Well, Cluster, Zone, Aquifer) and a bunch of measurement variables (e.g. PH, DO, Na, TIC, TOC, DOC). So in principle what we want to do now is transform our data in a way that allows us to facet the data based on our measurement variables.
+
+Here we go:
+
+```
+# We use the gather function
+# Option (1)
+aqd_long <- aqd_mock %>% gather(Parameter, value, TEMP_W_ES:Na)
+head(aqd_long)
+# Option (2)
+aqd_long <- gather(aqd_mock, Parameter, value, TEMP_W_ES:Na)
+head(aqd_long)
+```
+
+!!! QUESTION
+
+     Take a moment and try to figure out how gather() works. What is the role of the %>% operator?
+
+
+```
+head(aqd_long)
+    Well Month Season Cluster Zone Aquifer Parameter    value
+1    H41   Mar Spring       2  HTL     HTL TEMP_W_ES   4.4000
+2    H41   Jun Summer       2  HTL     HTL TEMP_W_ES   4.5000
+3    H41   Aug Summer       2  HTL     HTL TEMP_W_ES   4.7000
+4    H41   Nov Autumn       2  HTL     HTL TEMP_W_ES   4.8000
+5    H41   Feb Winter       2  HTL     HTL TEMP_W_ES   3.9000
+6    H41   May Spring       2  HTL     HTL TEMP_W_ES   4.8000
+7    H41  July Summer       2  HTL     HTL TEMP_W_ES   5.1000
+8    H41   Oct Autumn       2  HTL     HTL TEMP_W_ES   4.8000
+9    H41   Jan Winter       2  HTL     HTL TEMP_W_ES   4.9000
+10   H41   Apr Spring       2  HTL     HTL TEMP_W_ES   4.8000
+```
+Our data was partially transformed into what is commonly known as long format. We can now use the transformed dataframe for facetting as before:
+
+```
+ggplot(aqd_long, aes(x = Well, y = value), xlab="") +
+    geom_point() +
+    labs(title="Dataset parameters") + theme(axis.text.x = element_text(angle = 25, hjust = 1)) +
+    facet_wrap(~Parameter)
+```
+That kind of worked, success with the facetting, but this plot needs some serious tweaking in terms of visual appeal.
+
+!!! EXERCISE
+
+     1. Adjust the axis ranges by free scaling
+     2. Add boxplots as you did before
+     3. Use the black and white theme and get rid of the grid lines etc.
+
+A potential solution could look as follows:
+
+```
+ggplot(aqd_long, aes(x=Well, y=value)) + geom_boxplot(aes(fill = Season)) +
+  geom_point(aes(fill = Season, alpha = 0.6, shape = factor(Aquifer)), colour = "Black", position = position_jitterdodge()) +
+  labs(title="Dataset parameters") + theme(axis.text.x=element_text(angle = 25, hjust = 1)) +
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
+  facet_wrap(~Parameter, scales = "free") + ylab(label = "mg/L") + 
+  guides(size = FALSE, alpha = FALSE, fill=guide_legend(title="Season"), shape = guide_legend(title="Aquifer")) +
+  scale_shape_manual(values=c(21,22))
+```
+
+Although we look at quite a number of parameters the figure does not look terribly messy. Let's filter the dataset anyway a bit. Imagine we are only interested in the following parameters:
+
+* Fe
+* TEMP_W_ES
+
+!!! EXERCISE
+
+     * Subset the data accordingly and re-do the plotting.
+
+```
+aqd_long_subset <- aqd_long[which(aqd_long$Parameter == c("Fe", "TEMP_W_ES")),]
+```
+
+# Steps beyond
+
+## Going beyond the boxplot - correlation plots
+
+One of the strong suits of _ggplot2_ is that it comprises numerous vizualization options, with dot plots and box plots being only two of them. And beyond that there are meanwhile a lot of R packages that stick to the _ggplot2_ syntax that expand R's plotting capabilities even more. 
+
+Ok, what we will try now is to get in a very simple way an idea whether our parameters are correlated with each other.
+
+Quick reminder, part of our data is made up by descriptive variables. So first, we will extract only our measurement variables.
+
+```
+# What are the dimensions of our dataframe
+dim(aqd_mock)
+# Quickly check again which columns are containing descriptive variables
+head(aqd_mock)
+# Subset the dataframe accordingly
+aqd_num <- aqd_mock[7:24]
+```
+Done. Now we calculate correlations between all measurement variables.
+
+```
+# Some more necessary R packages
+library("ellipses")
+library("RColorBrewer")
+
+# Calculate correlations
+aqd_cor = cor(aqd_num)
+
+# A sneek peek at our correlations
+aqd_cor
+
+# We want to colorize our planned correlation plot, so lets create a palette
+my_colors <- brewer.pal(5, "Spectral")
+my_colors=colorRampPalette(my_colors)(100)
+
+# Plot the plot ;-)
+ord <- order(aqd_cor[1, ])
+aqd_ord = aqd_cor[ord, ord]
+plotcorr(aqd_ord , col=my_colors[data_ord*50+50] , mar=c(1,1,1,1)  )
+```
+
+Oh hallo, that's pretty, what does it mean? Let's break up these lines.
+
+```
+# Calculate correlations
+aqd_cor = cor(aqd_num)
+```
+
+!!! QUESTION
+	* What does cor() do?
+
+That was an easy one. What about:
+
+```
+# We want to colorize our planned correlation plot, so lets create a palette
+my_colors <- brewer.pal(5, "Spectral")
+my_colors=colorRampPalette(my_colors)(100)
+```
+
+!!! QUESTION
+	* What is a palette? 
+	* What do brewer.pal() and colorRampPalette() do?
+
+```
+# Plot the plot ;-)
+ord <- order(aqd_cor[1, ])
+aqd_ord = aqd_cor[ord, ord]
+plotcorr(aqd_ord , col=my_colors[aqd_ord*50+50], type = "lower", diag = FALSE, numbers = TRUE , mar=c(1,1,1,1))
+```
+
+!!! EXERCISE
+	* Take a moment and try to figure out what the figure shows you
+
+## Going beyond the boxplot while going back
+
+Last but not least we want to take a look at interactive plots. Plots do not have to static, interactive plots allow us to dive into data into a much more engaging way. 
+
+Good, what we now try is to turn or facetted box plot into an interactive version.
+
+Luckily, this is extremly easy.
+
+```
+p <- ggplot(aqd_long, aes(x=Well, y=value)) + geom_boxplot() +
+  geom_point(aes(fill = Season, alpha = 0.6, shape = factor(Aquifer)), colour = "Black", position = position_jitterdodge()) +
+  labs(title="Dataset parameters") + theme(axis.text.x=element_text(angle = 25, hjust = 1)) +
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
+  facet_wrap(~Parameter, scales = "free") + ylab(label = "mg/L") + 
+  guides(size = FALSE, alpha = FALSE, fill=guide_legend(title="Season"), shape = guide_legend(title="Aquifer")) +
+  scale_shape_manual(values=c(21,22))
+
+p <- ggplotly(p)
+p
+```
+
+You are now able to explore your data interactively in the viewer window of RStudio. For more ideas about interactive _ggplot2_ plots check out this [link](https://plot.ly/ggplot2/).
+
+!!! EXERCISE
+	Create interactive boxplots:
+
+	* For a single variable boxplot (e.g. Fe)
+	* And a subset
+
+<sub>Written by Carl-Eric Wegner</sub>
 <sub>Oct 2018</sub>
-
